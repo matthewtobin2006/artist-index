@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Artist Index</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0e0e0e;
+  --paper:#f5f1eb;
+  --paper2:#ede9e2;
+  --paper3:#e4dfd6;
+  --accent:#c8392b;
+  --accent2:#1a3a5c;
+  --gold:#b8963e;
+  --text:#1c1c1c;
+  --text2:#4a4a4a;
+  --text3:#888;
+  --rule:#ccc5bb;
+}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--text);font-family:'Instrument Sans',sans-serif;min-height:100vh;overflow-x:hidden}
+
+/* ── MASTHEAD ── */
+.masthead{
+  border-bottom:3px solid var(--ink);
+  padding:0 40px;
+  background:var(--paper);
+  position:sticky;top:0;z-index:200;
+}
+.masthead-inner{
+  display:flex;align-items:stretch;justify-content:space-between;
+  max-width:1400px;margin:0 auto;
+}
+.masthead-left{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:14px 0;border-right:1px solid var(--rule);padding-right:32px;
+}
+.masthead-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:2.6rem;font-weight:700;letter-spacing:-.02em;
+  color:var(--ink);line-height:1;text-transform:uppercase;
+}
+.masthead-title em{font-style:italic;color:var(--accent)}
+.masthead-sub{
+  font-family:'DM Mono',monospace;font-size:.62rem;
+  letter-spacing:.15em;text-transform:uppercase;color:var(--text3);
+  margin-top:3px;
+}
+.masthead-nav{
+  display:flex;align-items:center;gap:0;
+  padding-left:32px;
+}
+.nav-tab{
+  padding:0 20px;height:100%;display:flex;align-items:center;
+  font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.1em;
+  text-transform:uppercase;cursor:pointer;color:var(--text2);
+  border-left:1px solid var(--rule);border-bottom:3px solid transparent;
+  transition:all .15s;background:none;border-top:none;border-right:none;
+  margin-bottom:-3px;
+}
+.nav-tab:hover{color:var(--ink)}
+.nav-tab.active{color:var(--ink);border-bottom-color:var(--accent);font-weight:600}
+.masthead-right{
+  display:flex;align-items:center;padding-left:24px;border-left:1px solid var(--rule);
+}
+.issue-date{
+  font-family:'DM Mono',monospace;font-size:.6rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--text3);text-align:right;line-height:1.6;
+}
+
+/* ── PAGES ── */
+.page{display:none}
+.page.active{display:block}
+
+/* ── HERO BAND ── */
+.hero-band{
+  background:var(--ink);color:var(--paper);
+  padding:60px 40px 50px;
+  border-bottom:4px double var(--gold);
+}
+.hero-inner{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:end}
+.hero-kicker{
+  font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:14px;
+}
+.hero-headline{
+  font-family:'Cormorant Garamond',serif;font-size:4.5rem;font-weight:300;
+  line-height:.95;letter-spacing:-.02em;
+}
+.hero-headline strong{font-weight:700;display:block}
+.hero-headline em{font-style:italic;color:var(--gold)}
+.hero-body{font-size:.85rem;color:#aaa;line-height:1.7;max-width:380px;align-self:start;padding-top:8px}
+.hero-stat-row{display:flex;gap:32px;margin-top:32px;padding-top:24px;border-top:1px solid #333}
+.hero-stat-val{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:300;color:var(--paper);line-height:1}
+.hero-stat-lbl{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:#666;margin-top:4px}
+
+/* ── DECADE TABS ── */
+.decade-bar{
+  background:var(--paper2);border-bottom:1px solid var(--rule);
+  padding:0 40px;
+  position:sticky;top:72px;z-index:100;
+}
+.decade-bar-inner{max-width:1400px;margin:0 auto;display:flex;gap:0;align-items:center}
+.decade-btn{
+  padding:14px 24px;font-family:'DM Mono',monospace;font-size:.7rem;
+  letter-spacing:.1em;text-transform:uppercase;cursor:pointer;
+  color:var(--text3);border-bottom:2px solid transparent;
+  background:none;border-top:none;border-left:none;border-right:none;
+  transition:all .15s;margin-bottom:-1px;
+}
+.decade-btn:hover{color:var(--ink)}
+.decade-btn.active{color:var(--ink);border-bottom-color:var(--ink);font-weight:600}
+.decade-label{
+  margin-left:auto;font-family:'DM Mono',monospace;font-size:.6rem;
+  color:var(--text3);letter-spacing:.08em;
+}
+
+/* ── SECTION RULE ── */
+.section-rule{
+  max-width:1400px;margin:0 auto;padding:40px 40px 0;
+  display:flex;align-items:baseline;gap:16px;
+}
+.section-rule-label{
+  font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-style:italic;
+  color:var(--text3);white-space:nowrap;
+}
+.section-rule-line{flex:1;height:1px;background:var(--rule)}
+.section-rule-num{
+  font-family:'DM Mono',monospace;font-size:.6rem;color:var(--text3);
+  letter-spacing:.08em;
+}
+
+/* ── ARTIST GRID ── */
+.artist-grid{
+  max-width:1400px;margin:0 auto;
+  padding:24px 40px 60px;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:2px;
+}
+.artist-card{
+  background:var(--paper);border:1px solid var(--rule);
+  cursor:pointer;transition:all .2s;
+  position:relative;overflow:hidden;
+  aspect-ratio:3/4;
+  display:flex;flex-direction:column;justify-content:flex-end;
+}
+.artist-card:hover{z-index:2;transform:scale(1.02);box-shadow:0 8px 32px rgba(0,0,0,.15)}
+.artist-card-img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;filter:grayscale(30%);transition:filter .3s;
+}
+.artist-card:hover .artist-card-img{filter:grayscale(0%)}
+.artist-card-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(14,14,14,.9) 0%,rgba(14,14,14,.3) 50%,transparent 100%);
+}
+.artist-card-body{position:relative;padding:16px 14px 14px;color:var(--paper)}
+.artist-card-genre{
+  font-family:'DM Mono',monospace;font-size:.55rem;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:5px;
+}
+.artist-card-name{
+  font-family:'Cormorant Garamond',serif;font-size:1.4rem;
+  font-weight:600;line-height:1.1;
+}
+.artist-card-origin{font-size:.68rem;color:#aaa;margin-top:3px;font-family:'DM Mono',monospace}
+.artist-card-num{
+  position:absolute;top:10px;left:12px;
+  font-family:'DM Mono',monospace;font-size:.55rem;
+  color:rgba(255,255,255,.4);letter-spacing:.08em;
+}
+.artist-card.featured{grid-column:span 2;grid-row:span 2;aspect-ratio:auto;min-height:420px}
+
+/* ── EXPANDED PANEL ── */
+.panel-backdrop{
+  position:fixed;inset:0;background:rgba(14,14,14,.7);
+  z-index:300;display:none;align-items:flex-start;
+  justify-content:flex-end;
+  backdrop-filter:blur(2px);
+}
+.panel-backdrop.open{display:flex}
+.panel{
+  width:560px;height:100vh;background:var(--paper);
+  overflow-y:auto;position:relative;
+  border-left:3px solid var(--ink);
+  animation:slideIn .25s ease-out;
+}
+@keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
+.panel-close{
+  position:sticky;top:0;z-index:10;
+  display:flex;justify-content:space-between;align-items:center;
+  background:var(--ink);color:var(--paper);padding:14px 20px;
+  border-bottom:2px solid var(--gold);
+}
+.panel-close-label{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase}
+.panel-close-btn{
+  background:none;border:1px solid rgba(255,255,255,.3);color:var(--paper);
+  width:28px;height:28px;cursor:pointer;font-size:.8rem;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .15s;
+}
+.panel-close-btn:hover{background:var(--paper);color:var(--ink)}
+
+.panel-hero{position:relative;height:280px;overflow:hidden}
+.panel-hero-img{width:100%;height:100%;object-fit:cover;filter:grayscale(20%)}
+.panel-hero-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,var(--paper) 0%,transparent 60%);
+}
+.panel-hero-tag{
+  position:absolute;top:16px;left:16px;
+  background:var(--accent);color:white;
+  font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;
+  text-transform:uppercase;padding:4px 10px;
+}
+
+.panel-body{padding:0 28px 40px}
+.panel-name{
+  font-family:'Cormorant Garamond',serif;font-size:3rem;
+  font-weight:700;line-height:.95;margin-top:-8px;
+  letter-spacing:-.02em;
+}
+.panel-meta-row{
+  display:flex;gap:24px;margin:12px 0 20px;flex-wrap:wrap;
+}
+.panel-meta-item{display:flex;flex-direction:column;gap:2px}
+.panel-meta-lbl{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text3)}
+.panel-meta-val{font-size:.82rem;font-weight:500;color:var(--text)}
+.panel-bio{font-size:.85rem;line-height:1.75;color:var(--text2);border-top:1px solid var(--rule);padding-top:16px;margin-bottom:24px}
+
+.panel-section-head{
+  font-family:'DM Mono',monospace;font-size:.65rem;
+  letter-spacing:.15em;text-transform:uppercase;
+  color:var(--text3);margin:24px 0 12px;
+  display:flex;align-items:center;gap:10px;
+}
+.panel-section-head::after{content:'';flex:1;height:1px;background:var(--rule)}
+
+/* TOP TRACKS */
+.track-list{display:flex;flex-direction:column;gap:2px}
+.track-item{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 12px;background:var(--paper2);
+  border:1px solid transparent;transition:all .15s;cursor:pointer;
+}
+.track-item:hover{border-color:var(--rule);background:var(--paper3)}
+.track-num{
+  font-family:'DM Mono',monospace;font-size:.65rem;
+  color:var(--text3);width:18px;text-align:right;flex-shrink:0;
+}
+.track-art{width:38px;height:38px;object-fit:cover;flex-shrink:0;border:1px solid var(--rule)}
+.track-art-placeholder{width:38px;height:38px;background:var(--paper3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.6rem;color:var(--text3)}
+.track-info{flex:1;min-width:0}
+.track-name{font-size:.82rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.track-album{font-size:.68rem;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.track-streams{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--text3);flex-shrink:0}
+
+/* DISCOGRAPHY */
+.disco-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.disco-item{cursor:pointer}
+.disco-art{
+  width:100%;aspect-ratio:1;object-fit:cover;
+  border:1px solid var(--rule);display:block;
+  transition:transform .2s;
+}
+.disco-item:hover .disco-art{transform:scale(1.03)}
+.disco-name{font-size:.72rem;font-weight:500;margin-top:6px;line-height:1.3}
+.disco-year{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--text3);margin-top:2px}
+.disco-type{
+  font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);margin-top:1px;
+}
+.loading-state{
+  text-align:center;padding:40px 20px;
+  font-family:'DM Mono',monospace;font-size:.7rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--text3);
+}
+.loading-state::before{content:'Loading';animation:dots 1.2s infinite}
+@keyframes dots{0%{content:'Loading'}33%{content:'Loading.'}66%{content:'Loading..'}100%{content:'Loading...'}}
+
+/* ── BILLBOARD PAGE ── */
+.billboard-header{
+  background:var(--ink);color:var(--paper);
+  padding:50px 40px 40px;border-bottom:4px double var(--gold);
+}
+.billboard-header-inner{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:auto 1fr;gap:48px;align-items:end}
+.bb-logo{
+  font-family:'Cormorant Garamond',serif;font-size:5rem;font-weight:700;
+  line-height:.9;letter-spacing:-.04em;text-transform:uppercase;
+  border:3px solid var(--paper);padding:12px 20px;
+}
+.bb-logo span{display:block;font-size:1.1rem;font-weight:300;letter-spacing:.2em;margin-top:4px;color:var(--gold);font-style:italic}
+.bb-meta{padding-bottom:4px}
+.bb-title{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;font-style:italic;color:#aaa}
+.bb-subtitle{font-size:.8rem;color:#666;margin-top:6px;line-height:1.6}
+.bb-updated{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-top:14px}
+
+.bb-list{max-width:1400px;margin:0 auto;padding:32px 40px 60px}
+.bb-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--rule)}
+.bb-item{
+  background:var(--paper);display:flex;align-items:center;gap:16px;
+  padding:14px 18px;cursor:pointer;transition:background .15s;
+  border-bottom:none;
+}
+.bb-item:hover{background:var(--paper2)}
+.bb-rank{
+  font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;
+  color:var(--text3);width:44px;text-align:right;flex-shrink:0;line-height:1;
+}
+.bb-rank.top10{color:var(--accent);font-weight:600}
+.bb-art{width:48px;height:48px;object-fit:cover;flex-shrink:0;border:1px solid var(--rule)}
+.bb-art-placeholder{width:48px;height:48px;background:var(--paper3);flex-shrink:0}
+.bb-info{flex:1;min-width:0}
+.bb-artist-name{font-size:.9rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bb-track{font-size:.72rem;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.bb-wks{
+  font-family:'DM Mono',monospace;font-size:.6rem;color:var(--text3);
+  text-align:right;flex-shrink:0;line-height:1.5;
+}
+.bb-wks strong{display:block;font-size:.8rem;color:var(--text);font-family:'Cormorant Garamond',serif;font-weight:400}
+
+.bb-tab{padding:6px 18px;background:none;border:1px solid #444;color:#aaa;font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .15s;margin-right:4px}
+.bb-tab:hover{color:var(--paper);border-color:#888}
+.bb-tab.active{background:var(--gold);border-color:var(--gold);color:#1a1209;font-weight:600}
+.bb-loading{
+  text-align:center;padding:80px 40px;
+  font-family:'DM Mono',monospace;font-size:.75rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--text3);
+}
+.bb-error{
+  max-width:600px;margin:60px auto;padding:32px;
+  border:1px solid var(--rule);text-align:center;
+  font-size:.85rem;color:var(--text2);line-height:1.7;
+}
+.bb-error strong{display:block;font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:8px;font-style:italic}
+
+/* ── ABOUT PAGE ── */
+.about-wrap{max-width:800px;margin:80px auto;padding:0 40px 80px}
+.about-wrap h1{font-family:'Cormorant Garamond',serif;font-size:4rem;font-weight:300;font-style:italic;margin-bottom:24px;line-height:1}
+.about-wrap p{font-size:.9rem;line-height:1.85;color:var(--text2);margin-bottom:16px}
+.about-wrap strong{color:var(--text);font-weight:600}
+
+/* ── UTILITIES ── */
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="masthead-left">
+      <div class="masthead-title">Artist <em>Index</em></div>
+      <div class="masthead-sub">The Definitive Record</div>
+    </div>
+    <nav class="masthead-nav">
+      <button class="nav-tab active" onclick="showPage('browse',this)">Browse</button>
+      <button class="nav-tab" onclick="showPage('billboard',this)">Billboard 100</button>
+      <button class="nav-tab" onclick="showPage('about',this)">About</button>
+    </nav>
+    <div class="masthead-right">
+      <div class="issue-date" id="issue-date">Loading<br>date...</div>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════════════ BROWSE PAGE -->
+<div id="page-browse" class="page active">
+  <div class="hero-band">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-kicker">Est. 2025 · All Eras · All Genres</div>
+        <h1 class="hero-headline">
+          The Artists<br>
+          <strong>Who Defined</strong>
+          <em>Their Time</em>
+        </h1>
+      </div>
+      <div>
+        <p class="hero-body">From the streaming era's most dominant voices to the legends who built the blueprint — every artist, every album, every era. Click any card to open the full profile.</p>
+        <div class="hero-stat-row">
+          <div>
+            <div class="hero-stat-val" id="stat-artists">0</div>
+            <div class="hero-stat-lbl">Artists</div>
+          </div>
+          <div>
+            <div class="hero-stat-val" id="stat-albums">0</div>
+            <div class="hero-stat-lbl">Albums</div>
+          </div>
+          <div>
+            <div class="hero-stat-val" id="stat-decades">1</div>
+            <div class="hero-stat-lbl">Decades</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="decade-bar">
+    <div class="decade-bar-inner">
+      <button class="decade-btn active" onclick="setDecade('2020s',this)">2020s</button>
+      <button class="decade-btn" onclick="setDecade('2010s',this)">2010s</button>
+      <button class="decade-btn" onclick="setDecade('2000s',this)">2000s</button>
+      <button class="decade-btn" onclick="setDecade('1990s',this)">1990s</button>
+      <button class="decade-btn" onclick="setDecade('1980s',this)">1980s</button>
+      <button class="decade-btn" onclick="setDecade('1970s',this)">1970s</button>
+      <span class="decade-label" id="decade-count"></span>
+    </div>
+  </div>
+
+  <div class="section-rule">
+    <span class="section-rule-label" id="section-label">Artists of the 2020s</span>
+    <div class="section-rule-line"></div>
+    <span class="section-rule-num" id="section-num"></span>
+  </div>
+
+  <div class="artist-grid" id="artist-grid"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ BILLBOARD PAGE -->
+<div id="page-billboard" class="page">
+  <div class="billboard-header">
+    <div class="billboard-header-inner">
+      <div class="bb-logo">Hot<br>100<span>Artists</span></div>
+      <div class="bb-meta">
+        <div class="bb-title">Billboard Hot 100 — Top Artists</div>
+        <p class="bb-subtitle">The week's most-charted artists across all genres, ranked by total chart presence and peak positions. Updated every Monday.</p>
+        <div class="bb-updated" id="bb-updated">Fetching this week's chart...</div>
+      <div style="display:flex;gap:0;margin-top:16px;border-top:1px solid #333;padding-top:14px">
+        <button class="bb-tab active" data-view="artists" onclick="renderBBView('artists')">Artists</button>
+        <button class="bb-tab" data-view="songs" onclick="renderBBView('songs')">Hot 100 Songs</button>
+        <button class="bb-tab" data-view="albums" onclick="renderBBView('albums')">Albums 200</button>
+      </div>
+      </div>
+    </div>
+  </div>
+  <div class="bb-list" id="bb-list">
+    <div class="bb-loading">Fetching chart data...</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ ABOUT PAGE -->
+<div id="page-about" class="page">
+  <div class="about-wrap">
+    <h1>About<br>Artist Index</h1>
+    <p><strong>Artist Index</strong> is a personal music reference — a curated, editorially designed record of the artists who have defined their eras from the 2020s back through the decades.</p>
+    <p>Each artist profile pulls live data from the iTunes Search API for real album artwork, discographies, and track listings. The Billboard page updates weekly with the current Hot 100's most active artists.</p>
+    <p>Browse by decade. Click any artist to open their full profile — bio, origin, label, complete discography, and their ten most iconic recordings.</p>
+    <p>Built as a companion to the Stadium Index project. Same editorial sensibility, different obsession.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ ARTIST PANEL -->
+<div class="panel-backdrop" id="panel-backdrop" onclick="if(event.target===this)closePanel()">
+  <div class="panel" id="panel">
+    <div class="panel-close">
+      <span class="panel-close-label" id="panel-breadcrumb">Artist Profile</span>
+      <button class="panel-close-btn" onclick="closePanel()">✕</button>
+    </div>
+    <div class="panel-hero">
+      <img id="panel-img" src="" alt="" class="panel-hero-img" onerror="this.style.display='none'">
+      <div class="panel-hero-overlay"></div>
+      <div class="panel-hero-tag" id="panel-genre-tag"></div>
+    </div>
+    <div class="panel-body">
+      <div class="panel-name" id="panel-name"></div>
+      <div class="panel-meta-row" id="panel-meta-row"></div>
+      <p class="panel-bio" id="panel-bio"></p>
+
+      <div class="panel-section-head">Top 10 Most Streamed</div>
+      <div class="track-list" id="panel-tracks">
+        <div class="loading-state"></div>
+      </div>
+
+      <div class="panel-section-head">Discography</div>
+      <div class="disco-grid" id="panel-disco">
+        <div class="loading-state"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// ARTIST DATA — 2020s era (20 artists)
+// ─────────────────────────────────────────────
+const ARTISTS = [
+  // 2020s
+  {id:1,name:"Taylor Swift",decade:"2020s",genre:"Pop",origin:"Wyomissing, PA",label:"Republic Records",
+   bio:"The most dominant commercial force in modern music. Swift's Eras Tour became the first concert tour to gross over $1 billion, and her album re-recording project redefined how artists reclaim their catalogs. Her ability to reinvent her sound while maintaining an obsessive fan base is unmatched in the streaming era.",
+   itunes:"taylor swift",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/191125_Taylor_Swift_at_the_2019_American_Music_Awards_%28cropped%29.png/800px-191125_Taylor_Swift_at_the_2019_American_Music_Awards_%28cropped%29.png"},
+  {id:2,name:"Drake",decade:"2020s",genre:"Hip-Hop",origin:"Toronto, ON",label:"OVO/Republic",
+   bio:"The most-streamed artist of the 2010s carried his dominance into the 2020s, accumulating more chart records than any rapper in history. His beef with Kendrick Lamar in 2024 became one of the most watched rap battles in the genre's history.",
+   itunes:"drake",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Drake_July_2016.jpg/800px-Drake_July_2016.jpg"},
+  {id:3,name:"Kendrick Lamar",decade:"2020s",genre:"Hip-Hop",origin:"Compton, CA",label:"pgLang/Interscope",
+   bio:"Widely considered the greatest rapper of his generation. His 2024 Super Bowl halftime performance and landmark diss track 'Not Like Us' elevated his cultural status beyond music. His album Mr. Morale & The Big Steppers won the Pulitzer Prize discussion and a Grammy for Album of the Year.",
+   itunes:"kendrick lamar",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Kendrick_Lamar_-_Coachella_2023_%28cropped%29.jpg/800px-Kendrick_Lamar_-_Coachella_2023_%28cropped%29.jpg",featured:true},
+  {id:4,name:"Olivia Rodrigo",decade:"2020s",genre:"Pop/Alt-Rock",origin:"Temecula, CA",label:"Geffen/Interscope",
+   bio:"The most explosive debut of the decade. Her first single 'drivers license' broke Spotify records in 2021 and her album SOUR won three Grammys. GUTS (2023) confirmed she was the defining voice of Gen Z pop-rock — raw, emotional, and undeniably her own.",
+   itunes:"olivia rodrigo",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Olivia_Rodrigo_at_the_2021_Billboard_Music_Awards.png/800px-Olivia_Rodrigo_at_the_2021_Billboard_Music_Awards.png"},
+  {id:5,name:"Bad Bunny",decade:"2020s",genre:"Reggaeton/Latin",origin:"Vega Baja, PR",label:"Rimas Entertainment",
+   bio:"The first non-English-speaking artist to be Spotify's most-streamed artist three years in a row. Bad Bunny redefined the global reach of Latin music and proved that language is no barrier to mainstream dominance. His albums Un Verano Sin Ti and nadie sabe lo que va a pasar mañana are era-defining.",
+   itunes:"bad bunny",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Bad_Bunny_2022.jpg/800px-Bad_Bunny_2022.jpg",featured:true},
+  {id:6,name:"SZA",decade:"2020s",genre:"R&B/Soul",origin:"Maplewood, NJ",label:"Top Dawg/RCA",
+   bio:"The reigning queen of alternative R&B. SOS (2022) was the longest-charting album by a woman in Billboard 200 history, spending 23 weeks at number one. Her blend of vulnerability, wit, and sonic experimentation defines the sound of 2020s R&B.",
+   itunes:"sza",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/SZA_2018.jpg/800px-SZA_2018.jpg"},
+  {id:7,name:"Morgan Wallen",decade:"2020s",genre:"Country",origin:"Sneedville, TN",label:"Big Loud/Republic",
+   bio:"The dominant force in 2020s country music. Dangerous: The Double Album spent a record 10 non-consecutive weeks at number one and One Thing at a Time broke multiple streaming records. Wallen achieved crossover pop success while remaining authentically rooted in country tradition.",
+   itunes:"morgan wallen",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Morgan_Wallen_at_the_2021_CMT_Music_Awards.png/800px-Morgan_Wallen_at_the_2021_CMT_Music_Awards.png"},
+  {id:8,name:"The Weeknd",decade:"2020s",genre:"R&B/Pop",origin:"Toronto, ON",label:"XO/Republic",
+   bio:"Blinding Lights became the most successful song in Hot 100 history by total chart weeks. The Weeknd's cinematic approach to R&B — dark, maximalist, and deeply personal — made him one of the most recognizable artists of the era. His Super Bowl halftime show was among the most watched in history.",
+   itunes:"the weeknd",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/The_Weeknd_-_The_After_Hours_Tour_cropped.jpg/800px-The_Weeknd_-_The_After_Hours_Tour_cropped.jpg"},
+  {id:9,name:"Billie Eilish",decade:"2020s",genre:"Alt-Pop",origin:"Los Angeles, CA",label:"Darkroom/Interscope",
+   bio:"The first artist born in the 2000s to win a Grammy for Album of the Year. Eilish's bedroom-produced aesthetic and confessional songwriting redefined what pop stardom looks like. Her Oscar-winning Bond theme demonstrated range far beyond her years. Hit Me Hard and Soft (2024) won five Grammys.",
+   itunes:"billie eilish",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Billie_Eilish_2019_by_Glenn_Francis_%28cropped%29.jpg/800px-Billie_Eilish_2019_by_Glenn_Francis_%28cropped%29.jpg"},
+  {id:10,name:"Doja Cat",decade:"2020s",genre:"Pop/Hip-Hop",origin:"Los Angeles, CA",label:"Kemosabe/RCA",
+   bio:"One of the most unpredictable and genre-fluid stars of the era. Doja Cat's pivot from viral TikTok sensation to Grammy-winning, critically acclaimed artist — culminating in the art-rap experiment Scarlet — showed an artist refusing to be categorized or contained.",
+   itunes:"doja cat",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Doja_Cat_2019_by_Glenn_Francis.jpg/800px-Doja_Cat_2019_by_Glenn_Francis.jpg"},
+  {id:11,name:"Harry Styles",decade:"2020s",genre:"Pop/Rock",origin:"Redditch, UK",label:"Columbia",
+   bio:"One Direction's most successful solo graduate. Harry's House (2022) was a critical and commercial triumph that proved Styles was a genuine album artist and live performer of the first order. His sold-out Love on Tour became one of the highest-grossing concert tours in history.",
+   itunes:"harry styles",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Harry_Styles_July_2020.jpg/800px-Harry_Styles_July_2020.jpg"},
+  {id:12,name:"Lil Baby",decade:"2020s",genre:"Hip-Hop",origin:"Atlanta, GA",label:"Quality Control/Motown",
+   bio:"The most prolific hitmaker to emerge from Atlanta's trap scene. My Turn (2020) dominated the pandemic charts and confirmed Baby as one of hip-hop's most consistent commercial forces. His melodic approach to Atlanta rap influenced a generation of younger artists.",
+   itunes:"lil baby",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Lil_Baby_%282019%29.jpg/800px-Lil_Baby_%282019%29.jpg"},
+  {id:13,name:"Tyler, the Creator",decade:"2020s",genre:"Hip-Hop/Neo-Soul",origin:"Los Angeles, CA",label:"Columbia",
+   bio:"One of the most artistically ambitious figures in contemporary music. Call Me If You Get Lost won the Grammy for Best Rap Album and CHROMAKOPIA (2024) debuted at number one. Tyler's ability to evolve his sound from provocateur to maximalist auteur is one of music's great ongoing narratives.",
+   itunes:"tyler the creator",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Tyler_the_Creator_2019_%28cropped%29.jpg/800px-Tyler_the_Creator_2019_%28cropped%29.jpg",featured:true},
+  {id:14,name:"Post Malone",decade:"2020s",genre:"Pop/Hip-Hop",origin:"Syracuse, NY",label:"Republic",
+   bio:"One of the most-streamed artists in Spotify history. Post's genre-defiant approach — blending hip-hop, pop, and rock — gave him the broadest demographic reach of any artist of his generation. His surprise pivot to country on F-1 Trillion (2024) debuted at number one.",
+   itunes:"post malone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Post_Malone_2019_%28cropped%29.jpg/800px-Post_Malone_2019_%28cropped%29.jpg"},
+  {id:15,name:"Ariana Grande",decade:"2020s",genre:"Pop/R&B",origin:"Boca Raton, FL",label:"Republic",
+   bio:"One of the most technically accomplished pop vocalists alive, with multiple Hot 100 records to her name. Positions and eternal sunshine kept her at pop's center while her role as Glinda in Wicked (2024) introduced her to an entirely new generation of fans.",
+   itunes:"ariana grande",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Ariana_Grande_in_2020.jpg/800px-Ariana_Grande_in_2020.jpg"},
+  {id:16,name:"Sabrina Carpenter",decade:"2020s",genre:"Pop",origin:"Quakertown, PA",label:"Island",
+   bio:"The breakout story of 2024. Short n' Sweet was the defining pop album of the year, with Espresso becoming one of the songs of the summer. Carpenter's sharp wit, maximalist retro-pop aesthetic, and effortless cool made her the most talked-about new star of the decade.",
+   itunes:"sabrina carpenter",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Sabrina_Carpenter_2023_%28cropped%29.jpg/800px-Sabrina_Carpenter_2023_%28cropped%29.jpg"},
+  {id:17,name:"Jack Harlow",decade:"2020s",genre:"Hip-Hop",origin:"Louisville, KY",label:"Generation Now/Atlantic",
+   bio:"Louisville's most celebrated export became one of hip-hop's most charismatic mainstream voices. Come Home the Kids Miss You (2022) and First Class proved Harlow could anchor crossover pop moments while maintaining street credibility.",
+   itunes:"jack harlow",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Jack_Harlow_2021_%28cropped%29.jpg/800px-Jack_Harlow_2021_%28cropped%29.jpg"},
+  {id:18,name:"Gunna",decade:"2020s",genre:"Hip-Hop",origin:"College Park, GA",label:"Young Stoner Life/300",
+   bio:"One of Atlanta's most melodic trap voices and a key architect of the mumble-melodic style that defined early 2020s rap. DS4Ever debuted at number one and Gunna's signature drawl and designer-drenched aesthetic influenced scores of artists in his wake.",
+   itunes:"gunna",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Gunna_2019_%28cropped%29.jpg/800px-Gunna_2019_%28cropped%29.jpg"},
+  {id:19,name:"Beyoncé",decade:"2020s",genre:"Pop/R&B",origin:"Houston, TX",label:"Parkwood/Columbia",
+   bio:"Already a legend entering the decade, Beyoncé elevated further with RENAISSANCE (2022) — a love letter to Black queer dance music — and COWBOY CARTER (2024), which forced country music to reckon with its own history. She is the most Grammy-awarded artist in history.",
+   itunes:"beyonce",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Beyonc%C3%A9_at_The_Lion_King_European_Premiere_2019.png/800px-Beyonc%C3%A9_at_The_Lion_King_European_Premiere_2019.png",featured:true},
+  {id:20,name:"Chappell Roan",decade:"2020s",genre:"Pop",origin:"Willard, MO",label:"Island",
+   bio:"The most explosive grassroots breakthrough of 2024. Roan built a devoted following through years of independent touring before The Rise and Fall of a Midwest Princess finally broke through via TikTok virality and festival performances. Good Luck, Babe! became one of the defining songs of the year.",
+   itunes:"chappell roan",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Chappell_Roan_2024_%28cropped%29.jpg/800px-Chappell_Roan_2024_%28cropped%29.jpg"},
+];
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+let currentDecade = '2020s';
+let currentArtist = null;
+
+// ─────────────────────────────────────────────
+// PAGE NAV
+// ─────────────────────────────────────────────
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (id === 'billboard') loadBillboard();
+}
+
+// ─────────────────────────────────────────────
+// DATE
+// ─────────────────────────────────────────────
+function setDate() {
+  const d = new Date();
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('issue-date').innerHTML = `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}<br>Vol. I`;
+}
+setDate();
+
+// ─────────────────────────────────────────────
+// BROWSE / GRID
+// ─────────────────────────────────────────────
+function setDecade(decade, btn) {
+  currentDecade = decade;
+  document.querySelectorAll('.decade-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  buildGrid();
+}
+
+function buildGrid() {
+  const artists = ARTISTS.filter(a => a.decade === currentDecade);
+  const grid = document.getElementById('artist-grid');
+
+  document.getElementById('section-label').textContent = `Artists of the ${currentDecade}`;
+  document.getElementById('section-num').textContent = `${artists.length} artists`;
+  document.getElementById('decade-count').textContent = `${artists.length} artists`;
+  document.getElementById('stat-artists').textContent = ARTISTS.length;
+  document.getElementById('stat-decades').textContent = [...new Set(ARTISTS.map(a=>a.decade))].length;
+
+  if (!artists.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;padding:80px 0;text-align:center;font-family:'DM Mono',monospace;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3)">Artists coming soon — check back.</div>`;
+    return;
+  }
+
+  let num = 1;
+  grid.innerHTML = artists.map((a, i) => {
+    const featured = a.featured ? ' featured' : '';
+    return `<div class="artist-card${featured}" onclick="openPanel(${a.id})">
+      <img class="artist-card-img" src="${a.image}" alt="${a.name}" onerror="this.style.display='none'">
+      <div class="artist-card-overlay"></div>
+      <div class="artist-card-num">${String(num++).padStart(2,'0')}</div>
+      <div class="artist-card-body">
+        <div class="artist-card-genre">${a.genre}</div>
+        <div class="artist-card-name">${a.name}</div>
+        <div class="artist-card-origin">${a.origin}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ─────────────────────────────────────────────
+// ARTIST PANEL
+// ─────────────────────────────────────────────
+function openPanel(id) {
+  const a = ARTISTS.find(x => x.id === id);
+  if (!a) return;
+  currentArtist = a;
+
+  document.getElementById('panel-breadcrumb').textContent = `${a.decade} · ${a.genre}`;
+  document.getElementById('panel-img').src = a.image;
+  document.getElementById('panel-genre-tag').textContent = a.genre;
+  document.getElementById('panel-name').textContent = a.name;
+  document.getElementById('panel-bio').textContent = a.bio;
+
+  document.getElementById('panel-meta-row').innerHTML = [
+    {l:'Origin',v:a.origin},
+    {l:'Genre',v:a.genre},
+    {l:'Label',v:a.label},
+    {l:'Era',v:a.decade},
+  ].map(m=>`<div class="panel-meta-item"><div class="panel-meta-lbl">${m.l}</div><div class="panel-meta-val">${m.v}</div></div>`).join('');
+
+  document.getElementById('panel-tracks').innerHTML = '<div class="loading-state"></div>';
+  document.getElementById('panel-disco').innerHTML = '<div class="loading-state"></div>';
+
+  document.getElementById('panel-backdrop').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  fetchArtistData(a.itunes);
+}
+
+function closePanel() {
+  document.getElementById('panel-backdrop').classList.remove('open');
+  document.body.style.overflow = '';
+  currentArtist = null;
+}
+
+// ─────────────────────────────────────────────
+// ITUNES API
+// ─────────────────────────────────────────────
+async function fetchArtistData(term) {
+  try {
+    // Search for top tracks
+    const tracksUrl = `https://itunes.apple.com/search?term=${encodeURIComponent(term)}&entity=song&limit=10&sort=popular`;
+    const albumsUrl = `https://itunes.apple.com/search?term=${encodeURIComponent(term)}&entity=album&limit=15&sort=recent`;
+
+    const [tracksRes, albumsRes] = await Promise.all([
+      fetch(tracksUrl),
+      fetch(albumsUrl)
+    ]);
+
+    const [tracksData, albumsData] = await Promise.all([
+      tracksRes.json(),
+      albumsRes.json()
+    ]);
+
+    renderTracks(tracksData.results || []);
+    renderDiscography(albumsData.results || []);
+  } catch(e) {
+    document.getElementById('panel-tracks').innerHTML = '<div class="loading-state" style="animation:none">Unable to load track data</div>';
+    document.getElementById('panel-disco').innerHTML = '<div class="loading-state" style="animation:none">Unable to load discography</div>';
+  }
+}
+
+function renderTracks(tracks) {
+  const el = document.getElementById('panel-tracks');
+  if (!tracks.length) { el.innerHTML = '<div class="loading-state" style="animation:none">No tracks found</div>'; return; }
+
+  // Filter to unique track names, dedupe
+  const seen = new Set();
+  const unique = tracks.filter(t => {
+    const key = t.trackName?.toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).slice(0, 10);
+
+  el.innerHTML = unique.map((t, i) => {
+    const art = t.artworkUrl100 || '';
+    const artEl = art
+      ? `<img class="track-art" src="${art}" alt="">`
+      : `<div class="track-art-placeholder">♪</div>`;
+    return `<div class="track-item">
+      <div class="track-num">${i+1}</div>
+      ${artEl}
+      <div class="track-info">
+        <div class="track-name">${t.trackName || '—'}</div>
+        <div class="track-album">${t.collectionName || '—'}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderDiscography(albums) {
+  const el = document.getElementById('panel-disco');
+  if (!albums.length) { el.innerHTML = '<div class="loading-state" style="animation:none">No albums found</div>'; return; }
+
+  // Dedupe by collection name
+  const seen = new Set();
+  const unique = albums.filter(a => {
+    const key = a.collectionName?.toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).slice(0, 12);
+
+  el.innerHTML = unique.map(a => {
+    const art = (a.artworkUrl100 || '').replace('100x100','300x300');
+    const year = a.releaseDate ? new Date(a.releaseDate).getFullYear() : '';
+    const type = a.collectionType === 'Single' ? 'Single' : 'Album';
+    return `<div class="disco-item">
+      <img class="disco-art" src="${art}" alt="${a.collectionName}" onerror="this.style.background='var(--paper3)'">
+      <div class="disco-name">${a.collectionName || '—'}</div>
+      <div class="disco-year">${year}</div>
+      <div class="disco-type">${type}</div>
+    </div>`;
+  }).join('');
+}
+
+// ─────────────────────────────────────────────
+// BILLBOARD DATA — Real chart, week of May 17 2026
+// ─────────────────────────────────────────────
+const BB_ARTISTS=[{rank:1,name:"Noah Kahan",lw:1,peak:1,weeks:144},
+{rank:2,name:"Michael Jackson",lw:3,peak:2,weeks:529},
+{rank:3,name:"Morgan Wallen",lw:4,peak:1,weeks:374},
+{rank:4,name:"Ella Langley",lw:2,peak:1,weeks:87},
+{rank:5,name:"Kacey Musgraves",lw:99,peak:2,weeks:41},
+{rank:6,name:"Bruno Mars",lw:6,peak:1,weeks:597},
+{rank:7,name:"Luke Combs",lw:7,peak:1,weeks:479},
+{rank:8,name:"Olivia Dean",lw:8,peak:3,weeks:35},
+{rank:9,name:"Justin Bieber",lw:5,peak:1,weeks:517},
+{rank:10,name:"Taylor Swift",lw:10,peak:1,weeks:615},
+{rank:11,name:"Drake",lw:12,peak:1,weeks:617},
+{rank:12,name:"BTS",lw:11,peak:1,weeks:349},
+{rank:13,name:"Sabrina Carpenter",lw:14,peak:1,weeks:127},
+{rank:14,name:"sombr",lw:13,peak:5,weeks:56},
+{rank:15,name:"Olivia Rodrigo",lw:21,peak:1,weeks:215},
+{rank:16,name:"Bad Bunny",lw:15,peak:1,weeks:398},
+{rank:17,name:"Fleetwood Mac",lw:17,peak:3,weeks:370},
+{rank:18,name:"Alex Warren",lw:16,peak:4,weeks:70},
+{rank:19,name:"Rihanna",lw:22,peak:1,weeks:391},
+{rank:20,name:"Zach Bryan",lw:20,peak:1,weeks:207},
+{rank:21,name:"Kendrick Lamar",lw:19,peak:1,weeks:540},
+{rank:22,name:"Zara Larsson",lw:31,peak:22,weeks:43},
+{rank:23,name:"Billie Eilish",lw:39,peak:1,weeks:394},
+{rank:24,name:"SZA",lw:25,peak:1,weeks:349},
+{rank:25,name:"Riley Green",lw:23,peak:23,weeks:88},
+{rank:26,name:"ILLIT",lw:0,peak:26,weeks:4},
+{rank:27,name:"Harry Styles",lw:28,peak:1,weeks:297},
+{rank:28,name:"The Weeknd",lw:32,peak:1,weeks:565},
+{rank:29,name:"Chris Stapleton",lw:33,peak:1,weeks:550},
+{rank:30,name:"Don Toliver",lw:24,peak:1,weeks:51},
+{rank:31,name:"Shaboozey",lw:29,peak:8,weeks:108},
+{rank:32,name:"Kehlani",lw:9,peak:3,weeks:56},
+{rank:33,name:"HUNTR/X: EJAE, Audrey Nuna & REI AMI",lw:30,peak:2,weeks:45},
+{rank:34,name:"Teddy Swims",lw:34,peak:3,weeks:139},
+{rank:35,name:"Malcolm Todd",lw:27,peak:27,weeks:10},
+{rank:36,name:"Post Malone",lw:36,peak:1,weeks:515},
+{rank:37,name:"Dominic Fike",lw:37,peak:23,weeks:13},
+{rank:38,name:"Cody Johnson",lw:35,peak:12,weeks:175},
+{rank:39,name:"Ye",lw:38,peak:1,weeks:330},
+{rank:40,name:"Lady Gaga",lw:51,peak:1,weeks:370},
+{rank:41,name:"KATSEYE",lw:40,peak:6,weeks:49},
+{rank:42,name:"Benson Boone",lw:42,peak:2,weeks:120},
+{rank:43,name:"Frank Ocean",lw:43,peak:1,weeks:131},
+{rank:44,name:"Tame Impala",lw:44,peak:2,weeks:51},
+{rank:45,name:"Katy Perry",lw:56,peak:1,weeks:234},
+{rank:46,name:"Linkin Park",lw:47,peak:1,weeks:201},
+{rank:47,name:"Tucker Wetmore",lw:45,peak:28,weeks:84},
+{rank:48,name:"Nirvana",lw:48,peak:20,weeks:309},
+{rank:49,name:"RAYE",lw:41,peak:21,weeks:31},
+{rank:50,name:"The Black Keys",lw:0,peak:5,weeks:15},
+{rank:51,name:"Metallica",lw:53,peak:2,weeks:545},
+{rank:52,name:"Tate McRae",lw:46,peak:1,weeks:187},
+{rank:53,name:"Deftones",lw:55,peak:3,weeks:97},
+{rank:54,name:"Red Hot Chili Peppers",lw:54,peak:1,weeks:106},
+{rank:55,name:"Isaiah Rashad",lw:0,peak:41,weeks:3},
+{rank:56,name:"Mac Miller",lw:57,peak:2,weeks:140},
+{rank:57,name:"J. Cole",lw:49,peak:1,weeks:459},
+{rank:58,name:"Chappell Roan",lw:50,peak:1,weeks:108},
+{rank:59,name:"Jason Aldean",lw:26,peak:1,weeks:527},
+{rank:60,name:"Lil Baby",lw:72,peak:1,weeks:366},
+{rank:61,name:"Leon Thomas",lw:58,peak:30,weeks:59},
+{rank:62,name:"Eagles",lw:64,peak:10,weeks:329},
+{rank:63,name:"Chris Brown",lw:87,peak:1,weeks:534},
+{rank:64,name:"Foo Fighters",lw:18,peak:1,weeks:51},
+{rank:65,name:"DaBaby",lw:68,peak:1,weeks:144},
+{rank:66,name:"Hozier",lw:59,peak:3,weeks:224},
+{rank:67,name:"Sienna Spiro",lw:60,peak:35,weeks:18},
+{rank:68,name:"PinkPantheress",lw:61,peak:48,weeks:25},
+{rank:69,name:"Radiohead",lw:66,peak:4,weeks:104},
+{rank:70,name:"Stella Lefty",lw:75,peak:70,weeks:2},
+{rank:71,name:"Ariana Grande",lw:74,peak:1,weeks:544},
+{rank:72,name:"The Killers",lw:63,peak:1,weeks:27},
+{rank:73,name:"Creedence Clearwater Revival",lw:65,peak:31,weeks:258},
+{rank:74,name:"Miley Cyrus",lw:62,peak:3,weeks:260},
+{rank:75,name:"Coldplay",lw:67,peak:1,weeks:263},
+{rank:76,name:"Bella Kay",lw:70,peak:41,weeks:10},
+{rank:77,name:"Djo",lw:69,peak:26,weeks:42},
+{rank:78,name:"Tyler, The Creator",lw:83,peak:1,weeks:254},
+{rank:79,name:"Tems",lw:77,peak:58,weeks:40},
+{rank:80,name:"Bailey Zimmerman",lw:76,peak:9,weeks:198},
+{rank:81,name:"Gorillaz",lw:84,peak:2,weeks:38},
+{rank:82,name:"Dexter And The Moonrocks",lw:85,peak:82,weeks:4},
+{rank:83,name:"Queen",lw:98,peak:1,weeks:351},
+{rank:84,name:"Myles Smith",lw:78,peak:27,weeks:100},
+{rank:85,name:"Jelly Roll",lw:71,peak:1,weeks:199},
+{rank:86,name:"Weezer",lw:73,peak:8,weeks:37},
+{rank:87,name:"Sublime",lw:88,peak:79,weeks:14},
+{rank:88,name:"T.I.",lw:81,peak:7,weeks:44},
+{rank:89,name:"BigXthaPlug",lw:97,peak:13,weeks:102},
+{rank:90,name:"JENNIE",lw:100,peak:11,weeks:9},
+{rank:91,name:"Miguel",lw:92,peak:14,weeks:83},
+{rank:92,name:"Tyler Childers",lw:96,peak:7,weeks:126},
+{rank:93,name:"Fuerza Regida",lw:89,peak:3,weeks:121},
+{rank:94,name:"Ed Sheeran",lw:93,peak:1,weeks:610},
+{rank:95,name:"Prince",lw:0,peak:1,weeks:144},
+{rank:96,name:"Goo Goo Dolls",lw:94,peak:72,weeks:19},
+{rank:97,name:"Tori Amos",lw:0,peak:61,weeks:3},
+{rank:98,name:"Jon Pardi",lw:0,peak:14,weeks:147},
+{rank:99,name:"Whiskey Myers",lw:0,peak:7,weeks:3},
+{rank:100,name:"Lynyrd Skynyrd",lw:0,peak:1,weeks:0}];
+const BB_SONGS=[{rank:1,title:"Choosin\' Texas",artist:"Ella Langley",lw:1,peak:1,weeks:29},
+{rank:2,title:"Be Her",artist:"Ella Langley",lw:5,peak:2,weeks:12},
+{rank:3,title:"Drop Dead",artist:"Olivia Rodrigo",lw:4,peak:1,weeks:3},
+{rank:4,title:"Man I Need",artist:"Olivia Dean",lw:3,peak:2,weeks:37},
+{rank:5,title:"I Just Might",artist:"Bruno Mars",lw:2,peak:1,weeks:17},
+{rank:6,title:"So Easy (To Fall In Love)",artist:"Olivia Dean",lw:6,peak:6,weeks:32},
+{rank:7,title:"Ordinary",artist:"Alex Warren",lw:8,peak:1,weeks:64},
+{rank:8,title:"I Can\'t Love You Anymore",artist:"Ella Langley & Morgan Wallen",lw:7,peak:7,weeks:2},
+{rank:9,title:"Folded",artist:"Kehlani",lw:10,peak:6,weeks:47},
+{rank:10,title:"Dracula",artist:"Tame Impala & JENNIE",lw:18,peak:10,weeks:32},
+{rank:11,title:"Golden",artist:"HUNTR/X: EJAE, Audrey Nuna & REI AMI",lw:13,peak:1,weeks:46},
+{rank:12,title:"Daisies",artist:"Justin Bieber",lw:12,peak:2,weeks:33},
+{rank:13,title:"Stateside",artist:"PinkPantheress With Zara Larsson",lw:15,peak:6,weeks:18},
+{rank:14,title:"The Fate Of Ophelia",artist:"Taylor Swift",lw:17,peak:1,weeks:31},
+{rank:15,title:"Risk It All",artist:"Bruno Mars",lw:20,peak:4,weeks:10},
+{rank:16,title:"Sleepless In A Hotel Room",artist:"Luke Combs",lw:22,peak:11,weeks:17},
+{rank:17,title:"Billie Jean",artist:"Michael Jackson",lw:38,peak:1,weeks:27},
+{rank:18,title:"The Great Divide",artist:"Noah Kahan",lw:11,peak:6,weeks:14},
+{rank:19,title:"Opalite",artist:"Taylor Swift",lw:25,peak:1,weeks:31},
+{rank:20,title:"Doors",artist:"Noah Kahan",lw:9,peak:9,weeks:2},
+{rank:21,title:"Babydoll",artist:"Dominic Fike",lw:27,peak:16,weeks:13},
+{rank:22,title:"Homewrecker",artist:"sombr",lw:30,peak:22,weeks:13},
+{rank:23,title:"Midnight Sun",artist:"Zara Larsson",lw:47,peak:23,weeks:16},
+{rank:24,title:"Be By You",artist:"Luke Combs",lw:31,peak:12,weeks:12},
+{rank:25,title:"Yukon",artist:"Justin Bieber",lw:24,peak:12,weeks:43},
+{rank:26,title:"Pop Dat Thang",artist:"DaBaby",lw:43,peak:26,weeks:14},
+{rank:27,title:"Boston",artist:"Stella Lefty",lw:42,peak:27,weeks:5},
+{rank:28,title:"The Fall",artist:"Cody Johnson",lw:39,peak:26,weeks:32},
+{rank:29,title:"Human Nature",artist:"Michael Jackson",lw:0,peak:7,weeks:15},
+{rank:30,title:"Swim",artist:"BTS",lw:32,peak:1,weeks:7},
+{rank:31,title:"Loving Life Again",artist:"Ella Langley",lw:36,peak:21,weeks:7},
+{rank:32,title:"Beat It",artist:"Michael Jackson",lw:0,peak:1,weeks:26},
+{rank:33,title:"Earrings",artist:"Malcolm Todd",lw:40,peak:33,weeks:10},
+{rank:34,title:"Change My Mind",artist:"Riley Green",lw:41,peak:27,weeks:14},
+{rank:35,title:"E85",artist:"Don Toliver",lw:35,peak:15,weeks:14},
+{rank:36,title:"Porch Light",artist:"Noah Kahan",lw:21,peak:20,weeks:8},
+{rank:37,title:"Iloveitiloveitiloveit",artist:"Bella Kay",lw:37,peak:17,weeks:12},
+{rank:38,title:"Freakin\' Out",artist:"Dexter And The Moonrocks",lw:46,peak:33,weeks:7},
+{rank:39,title:"End Of August",artist:"Noah Kahan",lw:14,peak:14,weeks:2},
+{rank:40,title:"American Girls",artist:"Harry Styles",lw:49,peak:4,weeks:9},
+{rank:41,title:"Dashboard",artist:"Noah Kahan",lw:19,peak:19,weeks:2},
+{rank:42,title:"Don\'t Stop \'Til You Get Enough",artist:"Michael Jackson",lw:0,peak:1,weeks:22},
+{rank:43,title:"Willing And Able",artist:"Noah Kahan",lw:26,peak:26,weeks:2},
+{rank:44,title:"American Cars",artist:"Noah Kahan",lw:16,peak:16,weeks:2},
+{rank:45,title:"Body",artist:"Don Toliver",lw:52,peak:14,weeks:14},
+{rank:46,title:"Staying Still",artist:"Noah Kahan",lw:44,peak:44,weeks:2},
+{rank:47,title:"Downfall",artist:"Noah Kahan",lw:23,peak:23,weeks:2},
+{rank:48,title:"Die On This Hill",artist:"Sienna Spiro",lw:54,peak:19,weeks:20},
+{rank:49,title:"Fever Dream",artist:"Alex Warren",lw:55,peak:21,weeks:10},
+{rank:50,title:"Brunette",artist:"Tucker Wetmore",lw:60,peak:36,weeks:19},
+{rank:51,title:"Bottom Of Your Boots",artist:"Ella Langley",lw:53,peak:20,weeks:4},
+{rank:52,title:"Let Em Know",artist:"T.I.",lw:58,peak:33,weeks:15},
+{rank:53,title:"Lush Life",artist:"Zara Larsson",lw:61,peak:35,weeks:21},
+{rank:54,title:"Dandelion",artist:"Ella Langley",lw:57,peak:27,weeks:14},
+{rank:55,title:"Haircut",artist:"Noah Kahan",lw:28,peak:28,weeks:2},
+{rank:56,title:"White Keys",artist:"Dominic Fike",lw:59,peak:32,weeks:11},
+{rank:57,title:"I Ain\'t Coming Back",artist:"Morgan Wallen Featuring Post Malone",lw:63,peak:8,weeks:47},
+{rank:58,title:"Dry Spell",artist:"Kacey Musgraves",lw:83,peak:55,weeks:8},
+{rank:59,title:"Elizabeth Taylor",artist:"Taylor Swift",lw:64,peak:3,weeks:27},
+{rank:60,title:"Motion Party",artist:"BossMan Dlow",lw:66,peak:41,weeks:8},
+{rank:61,title:"Deny Deny Deny",artist:"Noah Kahan",lw:34,peak:34,weeks:2},
+{rank:62,title:"Don\'t We",artist:"Morgan Wallen",lw:68,peak:48,weeks:13},
+{rank:63,title:"Paid Time Off",artist:"Noah Kahan",lw:29,peak:29,weeks:2},
+{rank:64,title:"23",artist:"Noah Kahan",lw:33,peak:33,weeks:2},
+{rank:65,title:"Raindance",artist:"Dave & Tems",lw:69,peak:49,weeks:14},
+{rank:66,title:"Dan",artist:"Noah Kahan",lw:50,peak:50,weeks:2},
+{rank:67,title:"McArthur",artist:"HARDY Eric Church Morgan Wallen & Tim McGraw",lw:72,peak:31,weeks:14},
+{rank:68,title:"Beautiful Things",artist:"Megan Moroney",lw:73,peak:32,weeks:23},
+{rank:69,title:"Turn This Truck Around",artist:"Jordan Davis",lw:74,peak:57,weeks:10},
+{rank:70,title:"Orbiter",artist:"Noah Kahan",lw:79,peak:70,weeks:2},
+{rank:71,title:"All Them Horses",artist:"Noah Kahan",lw:45,peak:45,weeks:2},
+{rank:72,title:"Pinky Up",artist:"KATSEYE",lw:71,peak:28,weeks:4},
+{rank:73,title:"What You Saying",artist:"Lil Uzi Vert",lw:70,peak:12,weeks:19},
+{rank:74,title:"Bring Your Love",artist:"Madonna & Sabrina Carpenter",lw:0,peak:74,weeks:1},
+{rank:75,title:"What You Need",artist:"Tems",lw:77,peak:56,weeks:8},
+{rank:76,title:"Rethink Some Things",artist:"Luke Combs",lw:78,peak:46,weeks:7},
+{rank:77,title:"Rein Me In",artist:"Sam Fender & Olivia Dean",lw:80,peak:64,weeks:8},
+{rank:78,title:"Don\'t Tell On Me",artist:"Jason Aldean",lw:67,peak:67,weeks:4},
+{rank:79,title:"Self Aware",artist:"Temper City",lw:87,peak:79,weeks:5},
+{rank:80,title:"Runway",artist:"Lady Gaga & Doechii",lw:0,peak:50,weeks:3},
+{rank:81,title:"We Go Way Back",artist:"Noah Kahan",lw:48,peak:48,weeks:2},
+{rank:82,title:"Hate How You Look",artist:"Josh Ross",lw:85,peak:70,weeks:5},
+{rank:83,title:"Lighthouse",artist:"Noah Kahan",lw:65,peak:65,weeks:2},
+{rank:84,title:"Horses And Divorces",artist:"Kacey Musgraves Featuring Miranda Lambert",lw:0,peak:84,weeks:1},
+{rank:85,title:"In My Room",artist:"Julia Wolf",lw:82,peak:57,weeks:9},
+{rank:86,title:"Woman",artist:"Kane Brown",lw:89,peak:81,weeks:5},
+{rank:87,title:"Fine Place To Die",artist:"Alex Warren",lw:0,peak:87,weeks:1},
+{rank:88,title:"Spoiled",artist:"Noah Kahan",lw:56,peak:56,weeks:2},
+{rank:89,title:"Headed North",artist:"Noah Kahan",lw:51,peak:51,weeks:2},
+{rank:90,title:"Fallin",artist:"Chris Brown Featuring Leon Thomas",lw:0,peak:90,weeks:1},
+{rank:91,title:"Obvious",artist:"Chris Brown",lw:99,peak:57,weeks:4},
+{rank:92,title:"Mr. Know It All",artist:"Teddy Swims",lw:93,peak:76,weeks:4},
+{rank:93,title:"FDO",artist:"Pooh Shiesty",lw:86,peak:12,weeks:20},
+{rank:94,title:"Damned If I Do",artist:"Vincent Mason",lw:0,peak:94,weeks:1},
+{rank:95,title:"A Few Of Your Own",artist:"Noah Kahan",lw:81,peak:81,weeks:2},
+{rank:96,title:"Father",artist:"Ye & Travis Scott",lw:88,peak:21,weeks:6},
+{rank:97,title:"Noble",artist:"F3miii",lw:0,peak:97,weeks:1},
+{rank:98,title:"Ever Since U Left Me",artist:"French Montana & Max B",lw:98,peak:82,weeks:7},
+{rank:99,title:"Go Away",artist:"Weezer Featuring Best Coast",lw:94,peak:63,weeks:7},
+{rank:100,title:"Rocky Mountain Low",artist:"Corey Kent & Koe Wetzel",lw:0,peak:100,weeks:1}];
+const BB_ALBUMS=[{rank:1,title:"The Great Divide",artist:"Noah Kahan",lw:1,peak:1,weeks:2},
+{rank:2,title:"Dandelion",artist:"Ella Langley",lw:2,peak:1,weeks:4},
+{rank:3,title:"Middle Of Nowhere",artist:"Kacey Musgraves",lw:0,peak:3,weeks:1},
+{rank:4,title:"I\'m The Problem",artist:"Morgan Wallen",lw:3,peak:1,weeks:51},
+{rank:5,title:"Thriller",artist:"Michael Jackson",lw:7,peak:1,weeks:717},
+{rank:6,title:"Number Ones",artist:"Michael Jackson",lw:13,peak:6,weeks:236},
+{rank:7,title:"ARIRANG",artist:"BTS",lw:5,peak:1,weeks:7},
+{rank:8,title:"The Art Of Loving",artist:"Olivia Dean",lw:8,peak:3,weeks:32},
+{rank:9,title:"One Thing At A Time",artist:"Morgan Wallen",lw:9,peak:1,weeks:166},
+{rank:10,title:"Debi Tirar Mas Fotos",artist:"Bad Bunny",lw:12,peak:1,weeks:70},
+{rank:11,title:"Swag",artist:"Justin Bieber",lw:6,peak:2,weeks:43},
+{rank:12,title:"Octane",artist:"Don Toliver",lw:11,peak:1,weeks:14},
+{rank:13,title:"The Way I Am",artist:"Luke Combs",lw:14,peak:2,weeks:7},
+{rank:14,title:"Stick Season",artist:"Noah Kahan",lw:10,peak:2,weeks:180},
+{rank:15,title:"SOS",artist:"SZA",lw:15,peak:1,weeks:178},
+{rank:16,title:"The Romantic",artist:"Bruno Mars",lw:16,peak:1,weeks:10},
+{rank:17,title:"The Life Of A Showgirl",artist:"Taylor Swift",lw:17,peak:1,weeks:31},
+{rank:18,title:"...Its Been Awful",artist:"Isaiah Rashad",lw:0,peak:18,weeks:1},
+{rank:19,title:"Dangerous: The Double Album",artist:"Morgan Wallen",lw:20,peak:1,weeks:278},
+{rank:20,title:"The Diamond Collection",artist:"Post Malone",lw:21,peak:11,weeks:120},
+{rank:21,title:"Kehlani",artist:"Kehlani",lw:4,peak:4,weeks:2},
+{rank:22,title:"KPop Demon Hunters Soundtrack",artist:"Soundtrack",lw:19,peak:1,weeks:46},
+{rank:23,title:"Mans Best Friend",artist:"Sabrina Carpenter",lw:18,peak:1,weeks:36},
+{rank:24,title:"Youll Be Alright Kid",artist:"Alex Warren",lw:22,peak:5,weeks:76},
+{rank:25,title:"Take Care",artist:"Drake",lw:25,peak:1,weeks:688},
+{rank:26,title:"MAMIHLAPINATAPAI",artist:"ILLIT",lw:0,peak:26,weeks:1},
+{rank:27,title:"Rumours",artist:"Fleetwood Mac",lw:28,peak:1,weeks:684},
+{rank:28,title:"Hungover",artist:"Ella Langley",lw:26,peak:20,weeks:84},
+{rank:29,title:"Short n Sweet",artist:"Sabrina Carpenter",lw:27,peak:1,weeks:89},
+{rank:30,title:"30 Number One Hits",artist:"Jason Aldean",lw:29,peak:19,weeks:30},
+{rank:31,title:"Un Verano Sin Ti",artist:"Bad Bunny",lw:30,peak:1,weeks:209},
+{rank:32,title:"Sweet Boy",artist:"Malcolm Todd",lw:32,peak:32,weeks:18},
+{rank:33,title:"Greatest Hits",artist:"Queen",lw:34,peak:8,weeks:698},
+{rank:34,title:"Views",artist:"Drake",lw:36,peak:1,weeks:521},
+{rank:35,title:"Kiss All The Time",artist:"Harry Styles",lw:31,peak:1,weeks:9},
+{rank:36,title:"Midnight Sun",artist:"Zara Larsson",lw:0,peak:36,weeks:2},
+{rank:37,title:"So Close To What",artist:"Tate McRae",lw:35,peak:1,weeks:63},
+{rank:38,title:"Sour",artist:"Olivia Rodrigo",lw:41,peak:1,weeks:259},
+{rank:39,title:"Guts",artist:"Olivia Rodrigo",lw:47,peak:1,weeks:139},
+{rank:40,title:"Teenage Dream",artist:"Katy Perry",lw:50,peak:1,weeks:469},
+{rank:41,title:"DINASTIA",artist:"Peso Pluma & Tito Double P",lw:33,peak:6,weeks:19},
+{rank:42,title:"The Tortured Poets Department",artist:"Taylor Swift",lw:38,peak:1,weeks:107},
+{rank:43,title:"Tour Collection",artist:"Ed Sheeran",lw:40,peak:17,weeks:82},
+{rank:44,title:"Diamonds",artist:"Elton John",lw:43,peak:7,weeks:443},
+{rank:45,title:"Dont Mind If I Do",artist:"Riley Green",lw:42,peak:25,weeks:79},
+{rank:46,title:"Hit Me Hard And Soft",artist:"Billie Eilish",lw:46,peak:2,weeks:103},
+{rank:47,title:"Graduation",artist:"Kanye West",lw:45,peak:1,weeks:431},
+{rank:48,title:"Chronicle 20 Greatest Hits",artist:"CCR",lw:48,peak:18,weeks:797},
+{rank:49,title:"Scorpion",artist:"Drake",lw:55,peak:1,weeks:410},
+{rank:50,title:"I Barely Know Her",artist:"sombr",lw:44,peak:10,weeks:37},
+{rank:51,title:"Certified Lover Boy",artist:"Drake",lw:54,peak:1,weeks:244},
+{rank:52,title:"Some Sexy Songs 4 U",artist:"PARTYNEXTDOOR & Drake",lw:51,peak:1,weeks:64},
+{rank:53,title:"ANTI",artist:"Rihanna",lw:57,peak:1,weeks:523},
+{rank:54,title:"Blonde",artist:"Frank Ocean",lw:52,peak:1,weeks:485},
+{rank:55,title:"With Heaven On Top",artist:"Zach Bryan",lw:56,peak:1,weeks:17},
+{rank:56,title:"Nevermind",artist:"Nirvana",lw:65,peak:1,weeks:773},
+{rank:57,title:"Doo-Wops & Hooligans",artist:"Bruno Mars",lw:63,peak:3,weeks:779},
+{rank:58,title:"The Best Of Nickelback",artist:"Nickelback",lw:61,peak:21,weeks:291},
+{rank:59,title:"Curtain Call The Hits",artist:"Eminem",lw:64,peak:1,weeks:787},
+{rank:60,title:"Ctrl",artist:"SZA",lw:59,peak:3,weeks:465},
+{rank:61,title:"Believe",artist:"Justin Bieber",lw:39,peak:1,weeks:63},
+{rank:62,title:"The Collection",artist:"OneRepublic",lw:77,peak:46,weeks:38},
+{rank:63,title:"One Of These Nights",artist:"Eagles",lw:0,peak:1,weeks:57},
+{rank:64,title:"Greatest Hits",artist:"Tom Petty",lw:73,peak:2,weeks:669},
+{rank:65,title:"Thank Me Later",artist:"Drake",lw:72,peak:1,weeks:173},
+{rank:66,title:"This Ones For You",artist:"Luke Combs",lw:69,peak:4,weeks:466},
+{rank:67,title:"50 Number Ones",artist:"George Strait",lw:67,peak:1,weeks:383},
+{rank:68,title:"good kid mAAd city",artist:"Kendrick Lamar",lw:75,peak:2,weeks:706},
+{rank:69,title:"Am I The Drama",artist:"Cardi B",lw:62,peak:1,weeks:33},
+{rank:70,title:"Where Ive Been Isnt Where Im Going",artist:"Shaboozey",lw:71,peak:5,weeks:101},
+{rank:71,title:"American Heartbreak",artist:"Zach Bryan",lw:70,peak:5,weeks:207},
+{rank:72,title:"Greatest Hits",artist:"Pitbull",lw:76,peak:48,weeks:258},
+{rank:73,title:"PEACHES!",artist:"The Black Keys",lw:0,peak:73,weeks:1},
+{rank:74,title:"For All The Dogs",artist:"Drake",lw:74,peak:1,weeks:135},
+{rank:75,title:"Good Girl Gone Bad",artist:"Rihanna",lw:82,peak:2,weeks:233},
+{rank:76,title:"35 Biggest Hits",artist:"Toby Keith",lw:83,peak:1,weeks:246},
+{rank:77,title:"Cloud 9",artist:"Megan Moroney",lw:68,peak:1,weeks:11},
+{rank:78,title:"111XPANTIA",artist:"Fuerza Regida",lw:66,peak:2,weeks:53},
+{rank:79,title:"The Fame",artist:"Lady Gaga",lw:79,peak:2,weeks:467},
+{rank:80,title:"This Music May Contain Hope",artist:"RAYE",lw:49,peak:11,weeks:6},
+{rank:81,title:"Channel Orange",artist:"Frank Ocean",lw:81,peak:2,weeks:281},
+{rank:82,title:"Journeys Greatest Hits",artist:"Journey",lw:80,peak:10,weeks:908},
+{rank:83,title:"The Rise And Fall Of A Midwest Princess",artist:"Chappell Roan",lw:78,peak:2,weeks:111},
+{rank:84,title:"If I Know Me",artist:"Morgan Wallen",lw:88,peak:10,weeks:394},
+{rank:85,title:"Lover",artist:"Taylor Swift",lw:90,peak:1,weeks:350},
+{rank:86,title:"I Hope Youre Happy",artist:"BigXthaPlug",lw:84,peak:7,weeks:37},
+{rank:87,title:"F-1 Trillion",artist:"Post Malone",lw:85,peak:1,weeks:90},
+{rank:88,title:"The Essential Michael Jackson",artist:"Michael Jackson",lw:158,peak:31,weeks:541},
+{rank:89,title:"Legend The Best Of Bob Marley",artist:"Bob Marley & The Wailers",lw:92,peak:5,weeks:938},
+{rank:90,title:"Meteora",artist:"Linkin Park",lw:86,peak:1,weeks:245},
+{rank:91,title:"Currents",artist:"Tame Impala",lw:87,peak:4,weeks:248},
+{rank:92,title:"Tropicoqueta",artist:"Karol G",lw:60,peak:3,weeks:32},
+{rank:93,title:"Gold Greatest Hits",artist:"ABBA",lw:99,peak:25,weeks:428},
+{rank:94,title:"Greatest Hits",artist:"Fleetwood Mac",lw:96,peak:14,weeks:386},
+{rank:95,title:"Folklore",artist:"Taylor Swift",lw:95,peak:1,weeks:302},
+{rank:96,title:"Deadbeat",artist:"Tame Impala",lw:97,peak:4,weeks:24},
+{rank:97,title:"My Turn",artist:"Lil Baby",lw:93,peak:1,weeks:323},
+{rank:98,title:"Purpose",artist:"Justin Bieber",lw:58,peak:1,weeks:162},
+{rank:99,title:"GNX",artist:"Kendrick Lamar",lw:91,peak:1,weeks:76},
+{rank:100,title:"Zach Bryan",artist:"Zach Bryan",lw:94,peak:1,weeks:141}];
+
+let bbLoaded = false;
+let bbView = 'artists';
+
+async function loadBillboard() {
+  if (bbLoaded) return;
+  bbLoaded = true;
+  document.getElementById('bb-updated').textContent = 'Chart week of May 17, 2026 · Updated weekly';
+  renderBBView('artists');
+  fetchBBArtwork(BB_ARTISTS.slice(0,20));
+}
+
+function renderBBView(view) {
+  bbView = view;
+  document.querySelectorAll('.bb-tab').forEach(t => t.classList.toggle('active', t.dataset.view === view));
+  if (view === 'artists') renderBBArtists();
+  else if (view === 'songs') renderBBSongs();
+  else renderBBAlbums();
+}
+
+function renderBBArtists() {
+  const el = document.getElementById('bb-list');
+  el.innerHTML = `<div class="bb-grid">${BB_ARTISTS.map(a => {
+    const lw = a.lw === 0 ? '<span style="color:var(--accent);font-size:.55rem">RE-ENTRY</span>' : (a.lw > a.rank ? '▲' + (a.lw - a.rank) : a.lw < a.rank ? '▼' + (a.rank - a.lw) : '—');
+    return `<div class="bb-item" onclick="openBBArtist('${escHtml(a.name)}')" data-rank="${a.rank}">
+      <div class="bb-rank ${a.rank <= 10 ? 'top10' : ''}">${a.rank}</div>
+      <div class="bb-art-placeholder" id="bb-art-${a.rank}" style="width:48px;height:48px;background:var(--paper3);flex-shrink:0;border:1px solid var(--rule)"></div>
+      <div class="bb-info">
+        <div class="bb-artist-name">${escHtml(a.name)}</div>
+        <div class="bb-track">Last week: ${lw} &nbsp;·&nbsp; Peak: #${a.peak} &nbsp;·&nbsp; ${a.weeks} wks</div>
+      </div>
+      <div class="bb-wks"><strong>#${a.peak}</strong>peak</div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+function renderBBSongs() {
+  const el = document.getElementById('bb-list');
+  el.innerHTML = `<div class="bb-grid">${BB_SONGS.map(s => {
+    const lw = s.lw === 0 ? '<span style="color:var(--accent);font-size:.55rem">NEW</span>' : (s.lw > s.rank ? '▲' : s.lw < s.rank ? '▼' : '—');
+    return `<div class="bb-item" onclick="openBBArtist('${escHtml(s.artist.split(' Featuring')[0].split(' With ')[0].split(' & ')[0])}')">
+      <div class="bb-rank ${s.rank <= 10 ? 'top10' : ''}">${s.rank}</div>
+      <div style="width:48px;height:48px;background:var(--paper3);flex-shrink:0;border:1px solid var(--rule);display:flex;align-items:center;justify-content:center;font-size:.6rem;color:var(--text3)">♪</div>
+      <div class="bb-info">
+        <div class="bb-artist-name">${escHtml(s.title)}</div>
+        <div class="bb-track">${escHtml(s.artist)}</div>
+      </div>
+      <div class="bb-wks"><strong>#${s.peak}</strong>peak · ${s.weeks}wk</div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+function renderBBAlbums() {
+  const el = document.getElementById('bb-list');
+  el.innerHTML = `<div class="bb-grid">${BB_ALBUMS.map(a => {
+    const lw = a.lw === 0 ? '<span style="color:var(--accent);font-size:.55rem">NEW</span>' : (a.lw > a.rank ? '▲' : a.lw < a.rank ? '▼' : '—');
+    return `<div class="bb-item" onclick="openBBArtist('${escHtml(a.artist.split(' & ')[0].split(' And ')[0])}')">
+      <div class="bb-rank ${a.rank <= 10 ? 'top10' : ''}">${a.rank}</div>
+      <div style="width:48px;height:48px;background:var(--paper3);flex-shrink:0;border:1px solid var(--rule);display:flex;align-items:center;justify-content:center;font-size:.6rem;color:var(--text3)" id="bba-art-${a.rank}">◈</div>
+      <div class="bb-info">
+        <div class="bb-artist-name">${escHtml(a.title)}</div>
+        <div class="bb-track">${escHtml(a.artist)}</div>
+      </div>
+      <div class="bb-wks"><strong>#${a.peak}</strong>peak · ${a.weeks}wk</div>
+    </div>`;
+  }).join('')}</div>`;
+  fetchBBAlbumArt();
+}
+
+// renderBillboard replaced by renderBBArtists
+
+// renderBillboardStatic removed
+
+async function fetchBBAlbumArt() {
+  const top = BB_ALBUMS.slice(0, 15);
+  for (let i = 0; i < top.length; i++) {
+    const a = top[i];
+    try {
+      const q = encodeURIComponent(a.title + ' ' + a.artist);
+      const r = await fetch(`https://itunes.apple.com/search?term=${q}&entity=album&limit=1`);
+      const d = await r.json();
+      const result = d.results?.[0];
+      if (result?.artworkUrl100) {
+        const el = document.getElementById(`bba-art-${a.rank}`);
+        if (el) el.outerHTML = `<img style="width:48px;height:48px;object-fit:cover;flex-shrink:0;border:1px solid var(--rule)" src="${result.artworkUrl100}" alt="">`;
+      }
+    } catch(e) {}
+    await new Promise(r => setTimeout(r, 100));
+  }
+}
+
+async function fetchBBArtwork(artists) {
+  // Batch fetch artwork via iTunes for top 20
+  const top = artists.slice(0, 20);
+  for (let i = 0; i < top.length; i++) {
+    const a = top[i];
+    try {
+      const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(a.name)}&entity=musicArtist&limit=1`);
+      const d = await r.json();
+      const result = d.results?.[0];
+      if (result?.artworkUrl100) {
+        const el = document.getElementById(`bb-art-${i+1}`);
+        if (el) {
+          el.outerHTML = `<img class="bb-art" id="bb-art-${i+1}" src="${result.artworkUrl100}" alt="${escHtml(a.name)}">`;
+        }
+      }
+    } catch(e) {}
+    await new Promise(r => setTimeout(r, 80)); // rate limit
+  }
+}
+
+function openBBArtist(name) {
+  // Check if we have this artist in our database
+  const found = ARTISTS.find(a => a.name.toLowerCase() === name.toLowerCase());
+  if (found) {
+    openPanel(found.id);
+    return;
+  }
+
+  // Otherwise open a dynamic panel for Billboard artists
+  const tempArtist = {
+    id: -1,
+    name,
+    decade: '2020s',
+    genre: '—',
+    origin: '—',
+    label: '—',
+    bio: `${name} is currently charting on the Billboard Hot 100. Full profile coming soon.`,
+    itunes: name,
+    image: '',
+  };
+
+  document.getElementById('panel-breadcrumb').textContent = `Billboard Hot 100`;
+  document.getElementById('panel-img').src = '';
+  document.getElementById('panel-genre-tag').textContent = 'Hot 100';
+  document.getElementById('panel-name').textContent = name;
+  document.getElementById('panel-bio').textContent = tempArtist.bio;
+  document.getElementById('panel-meta-row').innerHTML = '';
+  document.getElementById('panel-tracks').innerHTML = '<div class="loading-state"></div>';
+  document.getElementById('panel-disco').innerHTML = '<div class="loading-state"></div>';
+  document.getElementById('panel-backdrop').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  fetchArtistData(name);
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+buildGrid();
+</script>
+</body>
+</html>
