@@ -140,14 +140,14 @@ body{background:var(--paper);color:var(--text);font-family:'Instrument Sans',san
   max-width:1400px;margin:0 auto;
   padding:24px 40px 60px;
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
-  gap:2px;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:3px;
 }
 .artist-card{
   background:var(--paper);border:1px solid var(--rule);
   cursor:pointer;transition:all .2s;
   position:relative;overflow:hidden;
-  aspect-ratio:3/4;
+  aspect-ratio:1/1;
   display:flex;flex-direction:column;justify-content:flex-end;
 }
 .artist-card:hover{z-index:2;transform:scale(1.02);box-shadow:0 8px 32px rgba(0,0,0,.15)}
@@ -176,7 +176,7 @@ body{background:var(--paper);color:var(--text);font-family:'Instrument Sans',san
   font-family:'DM Mono',monospace;font-size:.55rem;
   color:rgba(255,255,255,.4);letter-spacing:.08em;
 }
-.artist-card.featured{grid-column:span 2;grid-row:span 2;aspect-ratio:auto;min-height:420px}
+.artist-card.featured{aspect-ratio:1/1;}
 
 /* ── EXPANDED PANEL ── */
 .panel-backdrop{
@@ -495,64 +495,64 @@ const ARTISTS = [
   // 2020s
   {id:1,name:"Taylor Swift",decade:"2020s",genre:"Pop",origin:"Wyomissing, PA",label:"Republic Records",
    bio:"The most dominant commercial force in modern music. Swift's Eras Tour became the first concert tour to gross over $1 billion, and her album re-recording project redefined how artists reclaim their catalogs. Her ability to reinvent her sound while maintaining an obsessive fan base is unmatched in the streaming era.",
-   itunes:"taylor swift",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/191125_Taylor_Swift_at_the_2019_American_Music_Awards_%28cropped%29.png/800px-191125_Taylor_Swift_at_the_2019_American_Music_Awards_%28cropped%29.png"},
+   itunes:"taylor swift",album:"The Tortured Poets Department",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/191125_Taylor_Swift_at_the_2019_American_Music_Awards_%28cropped%29.png/800px-191125_Taylor_Swift_at_the_2019_American_Music_Awards_%28cropped%29.png"},
   {id:2,name:"Drake",decade:"2020s",genre:"Hip-Hop",origin:"Toronto, ON",label:"OVO/Republic",
    bio:"The most-streamed artist of the 2010s carried his dominance into the 2020s, accumulating more chart records than any rapper in history. His beef with Kendrick Lamar in 2024 became one of the most watched rap battles in the genre's history.",
-   itunes:"drake",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Drake_July_2016.jpg/800px-Drake_July_2016.jpg"},
+   itunes:"drake",album:"Certified Lover Boy",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Drake_July_2016.jpg/800px-Drake_July_2016.jpg"},
   {id:3,name:"Kendrick Lamar",decade:"2020s",genre:"Hip-Hop",origin:"Compton, CA",label:"pgLang/Interscope",
    bio:"Widely considered the greatest rapper of his generation. His 2024 Super Bowl halftime performance and landmark diss track 'Not Like Us' elevated his cultural status beyond music. His album Mr. Morale & The Big Steppers won the Pulitzer Prize discussion and a Grammy for Album of the Year.",
-   itunes:"kendrick lamar",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Kendrick_Lamar_-_Coachella_2023_%28cropped%29.jpg/800px-Kendrick_Lamar_-_Coachella_2023_%28cropped%29.jpg",featured:true},
+   itunes:"kendrick lamar",album:"GNX",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Kendrick_Lamar_-_Coachella_2023_%28cropped%29.jpg/800px-Kendrick_Lamar_-_Coachella_2023_%28cropped%29.jpg",featured:true},
   {id:4,name:"Olivia Rodrigo",decade:"2020s",genre:"Pop/Alt-Rock",origin:"Temecula, CA",label:"Geffen/Interscope",
    bio:"The most explosive debut of the decade. Her first single 'drivers license' broke Spotify records in 2021 and her album SOUR won three Grammys. GUTS (2023) confirmed she was the defining voice of Gen Z pop-rock — raw, emotional, and undeniably her own.",
-   itunes:"olivia rodrigo",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Olivia_Rodrigo_at_the_2021_Billboard_Music_Awards.png/800px-Olivia_Rodrigo_at_the_2021_Billboard_Music_Awards.png"},
+   itunes:"olivia rodrigo",album:"GUTS",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Olivia_Rodrigo_at_the_2021_Billboard_Music_Awards.png/800px-Olivia_Rodrigo_at_the_2021_Billboard_Music_Awards.png"},
   {id:5,name:"Bad Bunny",decade:"2020s",genre:"Reggaeton/Latin",origin:"Vega Baja, PR",label:"Rimas Entertainment",
    bio:"The first non-English-speaking artist to be Spotify's most-streamed artist three years in a row. Bad Bunny redefined the global reach of Latin music and proved that language is no barrier to mainstream dominance. His albums Un Verano Sin Ti and nadie sabe lo que va a pasar mañana are era-defining.",
-   itunes:"bad bunny",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Bad_Bunny_2022.jpg/800px-Bad_Bunny_2022.jpg",featured:true},
+   itunes:"bad bunny",album:"Un Verano Sin Ti",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Bad_Bunny_2022.jpg/800px-Bad_Bunny_2022.jpg",featured:true},
   {id:6,name:"SZA",decade:"2020s",genre:"R&B/Soul",origin:"Maplewood, NJ",label:"Top Dawg/RCA",
    bio:"The reigning queen of alternative R&B. SOS (2022) was the longest-charting album by a woman in Billboard 200 history, spending 23 weeks at number one. Her blend of vulnerability, wit, and sonic experimentation defines the sound of 2020s R&B.",
-   itunes:"sza",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/SZA_2018.jpg/800px-SZA_2018.jpg"},
+   itunes:"sza",album:"SOS",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/SZA_2018.jpg/800px-SZA_2018.jpg"},
   {id:7,name:"Morgan Wallen",decade:"2020s",genre:"Country",origin:"Sneedville, TN",label:"Big Loud/Republic",
    bio:"The dominant force in 2020s country music. Dangerous: The Double Album spent a record 10 non-consecutive weeks at number one and One Thing at a Time broke multiple streaming records. Wallen achieved crossover pop success while remaining authentically rooted in country tradition.",
-   itunes:"morgan wallen",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Morgan_Wallen_at_the_2021_CMT_Music_Awards.png/800px-Morgan_Wallen_at_the_2021_CMT_Music_Awards.png"},
+   itunes:"morgan wallen",album:"One Thing At A Time",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Morgan_Wallen_at_the_2021_CMT_Music_Awards.png/800px-Morgan_Wallen_at_the_2021_CMT_Music_Awards.png"},
   {id:8,name:"The Weeknd",decade:"2020s",genre:"R&B/Pop",origin:"Toronto, ON",label:"XO/Republic",
    bio:"Blinding Lights became the most successful song in Hot 100 history by total chart weeks. The Weeknd's cinematic approach to R&B — dark, maximalist, and deeply personal — made him one of the most recognizable artists of the era. His Super Bowl halftime show was among the most watched in history.",
-   itunes:"the weeknd",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/The_Weeknd_-_The_After_Hours_Tour_cropped.jpg/800px-The_Weeknd_-_The_After_Hours_Tour_cropped.jpg"},
+   itunes:"the weeknd",album:"After Hours",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/The_Weeknd_-_The_After_Hours_Tour_cropped.jpg/800px-The_Weeknd_-_The_After_Hours_Tour_cropped.jpg"},
   {id:9,name:"Billie Eilish",decade:"2020s",genre:"Alt-Pop",origin:"Los Angeles, CA",label:"Darkroom/Interscope",
    bio:"The first artist born in the 2000s to win a Grammy for Album of the Year. Eilish's bedroom-produced aesthetic and confessional songwriting redefined what pop stardom looks like. Her Oscar-winning Bond theme demonstrated range far beyond her years. Hit Me Hard and Soft (2024) won five Grammys.",
-   itunes:"billie eilish",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Billie_Eilish_2019_by_Glenn_Francis_%28cropped%29.jpg/800px-Billie_Eilish_2019_by_Glenn_Francis_%28cropped%29.jpg"},
+   itunes:"billie eilish",album:"Hit Me Hard And Soft",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Billie_Eilish_2019_by_Glenn_Francis_%28cropped%29.jpg/800px-Billie_Eilish_2019_by_Glenn_Francis_%28cropped%29.jpg"},
   {id:10,name:"Doja Cat",decade:"2020s",genre:"Pop/Hip-Hop",origin:"Los Angeles, CA",label:"Kemosabe/RCA",
    bio:"One of the most unpredictable and genre-fluid stars of the era. Doja Cat's pivot from viral TikTok sensation to Grammy-winning, critically acclaimed artist — culminating in the art-rap experiment Scarlet — showed an artist refusing to be categorized or contained.",
-   itunes:"doja cat",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Doja_Cat_2019_by_Glenn_Francis.jpg/800px-Doja_Cat_2019_by_Glenn_Francis.jpg"},
+   itunes:"doja cat",album:"Planet Her",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Doja_Cat_2019_by_Glenn_Francis.jpg/800px-Doja_Cat_2019_by_Glenn_Francis.jpg"},
   {id:11,name:"Harry Styles",decade:"2020s",genre:"Pop/Rock",origin:"Redditch, UK",label:"Columbia",
    bio:"One Direction's most successful solo graduate. Harry's House (2022) was a critical and commercial triumph that proved Styles was a genuine album artist and live performer of the first order. His sold-out Love on Tour became one of the highest-grossing concert tours in history.",
-   itunes:"harry styles",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Harry_Styles_July_2020.jpg/800px-Harry_Styles_July_2020.jpg"},
+   itunes:"harry styles",album:"Harry's House",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Harry_Styles_July_2020.jpg/800px-Harry_Styles_July_2020.jpg"},
   {id:12,name:"Lil Baby",decade:"2020s",genre:"Hip-Hop",origin:"Atlanta, GA",label:"Quality Control/Motown",
    bio:"The most prolific hitmaker to emerge from Atlanta's trap scene. My Turn (2020) dominated the pandemic charts and confirmed Baby as one of hip-hop's most consistent commercial forces. His melodic approach to Atlanta rap influenced a generation of younger artists.",
-   itunes:"lil baby",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Lil_Baby_%282019%29.jpg/800px-Lil_Baby_%282019%29.jpg"},
+   itunes:"lil baby",album:"My Turn",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Lil_Baby_%282019%29.jpg/800px-Lil_Baby_%282019%29.jpg"},
   {id:13,name:"Tyler, the Creator",decade:"2020s",genre:"Hip-Hop/Neo-Soul",origin:"Los Angeles, CA",label:"Columbia",
    bio:"One of the most artistically ambitious figures in contemporary music. Call Me If You Get Lost won the Grammy for Best Rap Album and CHROMAKOPIA (2024) debuted at number one. Tyler's ability to evolve his sound from provocateur to maximalist auteur is one of music's great ongoing narratives.",
-   itunes:"tyler the creator",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Tyler_the_Creator_2019_%28cropped%29.jpg/800px-Tyler_the_Creator_2019_%28cropped%29.jpg",featured:true},
+   itunes:"tyler the creator",album:"CHROMAKOPIA",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Tyler_the_Creator_2019_%28cropped%29.jpg/800px-Tyler_the_Creator_2019_%28cropped%29.jpg",featured:true},
   {id:14,name:"Post Malone",decade:"2020s",genre:"Pop/Hip-Hop",origin:"Syracuse, NY",label:"Republic",
    bio:"One of the most-streamed artists in Spotify history. Post's genre-defiant approach — blending hip-hop, pop, and rock — gave him the broadest demographic reach of any artist of his generation. His surprise pivot to country on F-1 Trillion (2024) debuted at number one.",
-   itunes:"post malone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Post_Malone_2019_%28cropped%29.jpg/800px-Post_Malone_2019_%28cropped%29.jpg"},
+   itunes:"post malone",album:"F-1 Trillion",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Post_Malone_2019_%28cropped%29.jpg/800px-Post_Malone_2019_%28cropped%29.jpg"},
   {id:15,name:"Ariana Grande",decade:"2020s",genre:"Pop/R&B",origin:"Boca Raton, FL",label:"Republic",
    bio:"One of the most technically accomplished pop vocalists alive, with multiple Hot 100 records to her name. Positions and eternal sunshine kept her at pop's center while her role as Glinda in Wicked (2024) introduced her to an entirely new generation of fans.",
-   itunes:"ariana grande",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Ariana_Grande_in_2020.jpg/800px-Ariana_Grande_in_2020.jpg"},
+   itunes:"ariana grande",album:"Eternal Sunshine",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Ariana_Grande_in_2020.jpg/800px-Ariana_Grande_in_2020.jpg"},
   {id:16,name:"Sabrina Carpenter",decade:"2020s",genre:"Pop",origin:"Quakertown, PA",label:"Island",
    bio:"The breakout story of 2024. Short n' Sweet was the defining pop album of the year, with Espresso becoming one of the songs of the summer. Carpenter's sharp wit, maximalist retro-pop aesthetic, and effortless cool made her the most talked-about new star of the decade.",
-   itunes:"sabrina carpenter",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Sabrina_Carpenter_2023_%28cropped%29.jpg/800px-Sabrina_Carpenter_2023_%28cropped%29.jpg"},
+   itunes:"sabrina carpenter",album:"Short n Sweet",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Sabrina_Carpenter_2023_%28cropped%29.jpg/800px-Sabrina_Carpenter_2023_%28cropped%29.jpg"},
   {id:17,name:"Jack Harlow",decade:"2020s",genre:"Hip-Hop",origin:"Louisville, KY",label:"Generation Now/Atlantic",
    bio:"Louisville's most celebrated export became one of hip-hop's most charismatic mainstream voices. Come Home the Kids Miss You (2022) and First Class proved Harlow could anchor crossover pop moments while maintaining street credibility.",
-   itunes:"jack harlow",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Jack_Harlow_2021_%28cropped%29.jpg/800px-Jack_Harlow_2021_%28cropped%29.jpg"},
+   itunes:"jack harlow",album:"Come Home The Kids Miss You",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Jack_Harlow_2021_%28cropped%29.jpg/800px-Jack_Harlow_2021_%28cropped%29.jpg"},
   {id:18,name:"Gunna",decade:"2020s",genre:"Hip-Hop",origin:"College Park, GA",label:"Young Stoner Life/300",
    bio:"One of Atlanta's most melodic trap voices and a key architect of the mumble-melodic style that defined early 2020s rap. DS4Ever debuted at number one and Gunna's signature drawl and designer-drenched aesthetic influenced scores of artists in his wake.",
-   itunes:"gunna",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Gunna_2019_%28cropped%29.jpg/800px-Gunna_2019_%28cropped%29.jpg"},
+   itunes:"gunna",album:"DS4EVER",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Gunna_2019_%28cropped%29.jpg/800px-Gunna_2019_%28cropped%29.jpg"},
   {id:19,name:"Beyoncé",decade:"2020s",genre:"Pop/R&B",origin:"Houston, TX",label:"Parkwood/Columbia",
    bio:"Already a legend entering the decade, Beyoncé elevated further with RENAISSANCE (2022) — a love letter to Black queer dance music — and COWBOY CARTER (2024), which forced country music to reckon with its own history. She is the most Grammy-awarded artist in history.",
-   itunes:"beyonce",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Beyonc%C3%A9_at_The_Lion_King_European_Premiere_2019.png/800px-Beyonc%C3%A9_at_The_Lion_King_European_Premiere_2019.png",featured:true},
+   itunes:"beyonce",album:"RENAISSANCE",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Beyonc%C3%A9_at_The_Lion_King_European_Premiere_2019.png/800px-Beyonc%C3%A9_at_The_Lion_King_European_Premiere_2019.png",featured:true},
   {id:20,name:"Chappell Roan",decade:"2020s",genre:"Pop",origin:"Willard, MO",label:"Island",
    bio:"The most explosive grassroots breakthrough of 2024. Roan built a devoted following through years of independent touring before The Rise and Fall of a Midwest Princess finally broke through via TikTok virality and festival performances. Good Luck, Babe! became one of the defining songs of the year.",
-   itunes:"chappell roan",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Chappell_Roan_2024_%28cropped%29.jpg/800px-Chappell_Roan_2024_%28cropped%29.jpg"},
+   itunes:"chappell roan",album:"The Rise And Fall Of A Midwest Princess",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Chappell_Roan_2024_%28cropped%29.jpg/800px-Chappell_Roan_2024_%28cropped%29.jpg"},
 ];
 
 // ─────────────────────────────────────────────
@@ -650,18 +650,22 @@ async function fetchAllCardArt(artists) {
   for (let i = 0; i < artists.length; i++) {
     const a = artists[i];
     try {
-      const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(a.itunes)}&entity=musicArtist&limit=1`);
+      // Search for an album to get reliable artwork (artist photos from iTunes are placeholders)
+      const q = encodeURIComponent(a.album || a.itunes);
+      const r = await fetch(`https://itunes.apple.com/search?term=${q}&entity=album&limit=3`);
       const d = await r.json();
-      const result = d.results?.[0];
-      if (result?.artworkUrl100) {
+      // Find a result matching this artist
+      const results = d.results || [];
+      const match = results.find(x => x.artistName?.toLowerCase().includes(a.itunes.split(' ')[0].toLowerCase())) || results[0];
+      if (match?.artworkUrl100) {
         const el = document.getElementById(`acard-${a.id}`);
         if (el) {
-          const url = result.artworkUrl100.replace('100x100', '600x600');
+          const url = match.artworkUrl100.replace('100x100', '600x600');
           el.style.backgroundImage = `url(${url})`;
         }
       }
     } catch(e) {}
-    await new Promise(r => setTimeout(r, 60));
+    await new Promise(r => setTimeout(r, 80));
   }
 }
 
@@ -674,12 +678,13 @@ function openPanel(id) {
   currentArtist = a;
 
   document.getElementById('panel-breadcrumb').textContent = `${a.decade} · ${a.genre}`;
-  // Fetch artist image from iTunes for panel
+  // Fetch album artwork for panel hero (artist photos from iTunes are placeholders)
   document.getElementById('panel-img').src = '';
-  fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(a.itunes)}&entity=musicArtist&limit=1`)
+  fetch(`https://itunes.apple.com/search?term=${encodeURIComponent((a.album||a.itunes))}&entity=album&limit=3`)
     .then(r=>r.json()).then(d=>{
-      const res = d.results?.[0];
-      if(res?.artworkUrl100) document.getElementById('panel-img').src = res.artworkUrl100.replace('100x100','600x600');
+      const results = d.results||[];
+      const match = results.find(x=>x.artistName?.toLowerCase().includes(a.itunes.split(' ')[0].toLowerCase()))||results[0];
+      if(match?.artworkUrl100) document.getElementById('panel-img').src = match.artworkUrl100.replace('100x100','600x600');
     }).catch(()=>{});
   document.getElementById('panel-genre-tag').textContent = a.genre;
   document.getElementById('panel-name').textContent = a.name;
