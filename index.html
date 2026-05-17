@@ -387,6 +387,34 @@ body{background:var(--paper);color:var(--text);font-family:'Instrument Sans',san
 
 /* Make panel relative for overlay positioning */
 .panel{position:relative}
+
+/* Inline tracklist */
+.inline-tl{
+  margin-top:16px;border-top:2px solid var(--ink);
+  padding-top:16px;
+}
+.inline-tl-hero{
+  display:flex;align-items:center;gap:14px;
+  margin-bottom:16px;
+}
+.inline-tl-art{
+  width:64px;height:64px;object-fit:cover;
+  border:1px solid var(--rule);flex-shrink:0;
+}
+.inline-tl-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.1rem;font-weight:700;line-height:1.2;
+}
+.inline-tl-meta{
+  font-family:'DM Mono',monospace;font-size:.6rem;
+  color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-top:3px;
+}
+.inline-tl-tracks{display:flex;flex-direction:column}
+.disco-item.active-disco{
+  outline:2px solid var(--ink);
+  outline-offset:2px;
+}
+.disco-item{transition:outline .15s}
 </style>
 </head>
 <body>
@@ -502,8 +530,8 @@ body{background:var(--paper);color:var(--text);font-family:'Instrument Sans',san
       <span class="panel-close-label" id="panel-breadcrumb">Artist Profile</span>
       <button class="panel-close-btn" onclick="closePanel()">✕</button>
     </div>
-    <div class="panel-hero">
-      <img id="panel-img" src="" alt="" class="panel-hero-img" onerror="this.style.display='none'">
+    <div class="panel-hero" id="panel-hero-wrap">
+      <img id="panel-img" src="" alt="" class="panel-hero-img" onerror="this.style.display='none'" onload="this.style.display='block'">
       <div class="panel-hero-overlay"></div>
       <div class="panel-hero-tag" id="panel-genre-tag"></div>
     </div>
@@ -917,32 +945,62 @@ function closePanel() {
   currentArtist = null;
 }
 
-async function openTracklist(collectionId, name, art, year, type) {
-  const overlay = document.getElementById('tracklist-overlay');
-  document.getElementById('tl-name').textContent = name;
-  document.getElementById('tl-year').textContent = `${year} · ${type}`;
-  document.getElementById('tl-art').src = art;
-  document.getElementById('tl-tracks').innerHTML = '<div class="loading-state"></div>';
-  overlay.classList.add('open');
+let activeDiscoItem = null;
+
+async function toggleTracklist(el, collectionId, name, art, year, type) {
+  // Remove any existing tracklist
+  const existing = document.getElementById('inline-tracklist');
+  if (existing) {
+    if (activeDiscoItem === el) {
+      existing.remove();
+      activeDiscoItem = null;
+      el.classList.remove('active-disco');
+      return;
+    }
+    existing.remove();
+    if (activeDiscoItem) activeDiscoItem.classList.remove('active-disco');
+  }
+
+  activeDiscoItem = el;
+  el.classList.add('active-disco');
+
+  // Insert tracklist after the disco grid
+  const discoGrid = document.getElementById('panel-disco');
+  const tl = document.createElement('div');
+  tl.id = 'inline-tracklist';
+  tl.className = 'inline-tl';
+  tl.innerHTML = `
+    <div class="inline-tl-hero">
+      <img class="inline-tl-art" src="${art}" alt="">
+      <div>
+        <div class="inline-tl-name">${name}</div>
+        <div class="inline-tl-meta">${year} · ${type}</div>
+      </div>
+    </div>
+    <div class="inline-tl-tracks" id="inline-tl-tracks">
+      <div class="loading-state"></div>
+    </div>`;
+  discoGrid.after(tl);
+  tl.scrollIntoView({behavior:'smooth', block:'nearest'});
 
   try {
     const r = await fetch(`https://itunes.apple.com/lookup?id=${collectionId}&entity=song`);
     const d = await r.json();
-    const tracks = (d.results || []).filter(x => x.wrapperType === 'track').sort((a,b) => a.trackNumber - b.trackNumber);
+    const tracks = (d.results||[]).filter(x=>x.wrapperType==='track').sort((a,b)=>a.trackNumber-b.trackNumber);
     if (!tracks.length) {
-      document.getElementById('tl-tracks').innerHTML = '<div class="loading-state" style="animation:none">No tracks found</div>';
+      document.getElementById('inline-tl-tracks').innerHTML = '<div class="loading-state" style="animation:none">No tracks found</div>';
       return;
     }
-    document.getElementById('tl-tracks').innerHTML = tracks.map(t => `
+    document.getElementById('inline-tl-tracks').innerHTML = tracks.map(t=>`
       <div class="tl-track">
         <div class="tl-num">${t.trackNumber}</div>
         <div class="tl-info">
-          <div class="tl-title">${t.trackName}</div>
-          <div class="tl-duration">${Math.floor(t.trackTimeMillis/60000)}:${String(Math.floor((t.trackTimeMillis%60000)/1000)).padStart(2,'0')}</div>
+          <div class="tl-title">${t.trackName || '—'}</div>
+          <div class="tl-duration">${t.trackTimeMillis ? Math.floor(t.trackTimeMillis/60000)+':'+String(Math.floor((t.trackTimeMillis%60000)/1000)).padStart(2,'0') : '—'}</div>
         </div>
       </div>`).join('');
   } catch(e) {
-    document.getElementById('tl-tracks').innerHTML = '<div class="loading-state" style="animation:none">Unable to load tracks</div>';
+    document.getElementById('inline-tl-tracks').innerHTML = '<div class="loading-state" style="animation:none">Unable to load tracks</div>';
   }
 }
 
@@ -1045,7 +1103,7 @@ function renderDiscography(albums) {
     const art = (a.artworkUrl100 || '').replace('100x100','300x300');
     const year = a.releaseDate ? new Date(a.releaseDate).getFullYear() : '';
     const type = a.collectionType === 'Single' ? 'Single' : 'Album';
-    return `<div class="disco-item" onclick="openTracklist(${a.collectionId},'${escHtml(a.collectionName||'')}','${art}','${year}','${type}')">
+    return `<div class="disco-item" onclick="toggleTracklist(this,${a.collectionId},'${escHtml(a.collectionName||'')}','${art}','${year}','${type}')">
       <img class="disco-art" src="${art}" alt="${a.collectionName}" onerror="this.style.background='var(--paper3)'">
       <div class="disco-name">${a.collectionName || '—'}</div>
       <div class="disco-year">${year}</div>
@@ -1454,6 +1512,7 @@ function renderBBAlbums() {
 
 // renderBillboardStatic removed
 
+const ALBUM_IDS={"Sweet Boy":1703000001,"Certified Lover Boy":1581225361,"Some Sexy Songs 4 U":1794380797,"ANTI":1065584870,"Blonde":1146195536,"With Heaven On Top":1761375465,"Nevermind":1440742022,"Doo-Wops & Hooligans":394598092,"The Best Of Nickelback":1477098719,"Curtain Call The Hits":185215781,"Ctrl":1223048131,"Believe":529815900,"The Collection":1569818871,"One Of These Nights":1443135089,"Greatest Hits Tom Petty":342920265,"Thank Me Later":380834085,"This Ones For You":1440881920,"50 Number Ones":1440873069,"good kid mAAd city":560097651,"Am I The Drama":1782000001,"Where Ive Been Isnt Where Im Going":1694472614,"American Heartbreak":1621974551,"Greatest Hits Pitbull":1440870000,"PEACHES!":1800000010,"For All The Dogs":1709675183,"Good Girl Gone Bad":254014036,"35 Biggest Hits":1440882000,"Cloud 9":1762000001,"111XPANTIA":1756000001,"The Fame":1440742897,"This Music May Contain Hope":1800000011,"Channel Orange":537516890,"Journeys Greatest Hits":1440745100,"The Rise And Fall Of A Midwest Princess":1678274547,"If I Know Me":1440873500,"Lover":1468058165,"I Hope Youre Happy":1800000012,"F-1 Trillion":1750571049,"The Essential Michael Jackson":269573838,"Legend The Best Of Bob Marley":1440742173,"Meteora":35540629,"Currents":1024433553,"Tropicoqueta":1782000002,"Gold Greatest Hits":1440822646,"Greatest Hits Fleetwood Mac":1440874000,"Folklore":1528113235,"Deadbeat":1800000013,"My Turn":1501473867,"Purpose":1059290289,"GNX":1781511276,"Zach Bryan":1638661342};
 async function fetchBBAlbumArt() {
   const top = BB_ALBUMS.slice(0, 50);
   for (let i = 0; i < top.length; i++) {
