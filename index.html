@@ -583,6 +583,26 @@ function setDate() {
 setDate();
 
 // ─────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────
+function escStr(s){ return String(s).replace(/'/g,"\'"); }
+
+async function fetchCardArt(id, term) {
+  try {
+    const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(term)}&entity=musicArtist&limit=1`);
+    const d = await r.json();
+    const result = d.results?.[0];
+    if (result?.artworkUrl100) {
+      const el = document.getElementById(`acard-${id}`);
+      if (el) {
+        el.src = result.artworkUrl100.replace('100x100','600x600');
+        el.onerror = () => { el.style.display='none'; };
+      }
+    }
+  } catch(e) {}
+}
+
+// ─────────────────────────────────────────────
 // BROWSE / GRID
 // ─────────────────────────────────────────────
 function setDecade(decade, btn) {
@@ -611,7 +631,7 @@ function buildGrid() {
   grid.innerHTML = artists.map((a, i) => {
     const featured = a.featured ? ' featured' : '';
     return `<div class="artist-card${featured}" onclick="openPanel(${a.id})">
-      <img class="artist-card-img" src="${a.image}" alt="${a.name}" onerror="this.style.display='none'">
+      <img class="artist-card-img" src="${a.image}" alt="${a.name}" id="acard-${a.id}" onerror="fetchCardArt(${a.id},'${escStr(a.itunes)}')">
       <div class="artist-card-overlay"></div>
       <div class="artist-card-num">${String(num++).padStart(2,'0')}</div>
       <div class="artist-card-body">
@@ -1086,7 +1106,7 @@ function renderBBSongs() {
     const lw = s.lw === 0 ? '<span style="color:var(--accent);font-size:.55rem">NEW</span>' : (s.lw > s.rank ? '▲' : s.lw < s.rank ? '▼' : '—');
     return `<div class="bb-item" onclick="openBBArtist('${escHtml(s.artist.split(' Featuring')[0].split(' With ')[0].split(' & ')[0])}')">
       <div class="bb-rank ${s.rank <= 10 ? 'top10' : ''}">${s.rank}</div>
-      <div style="width:48px;height:48px;background:var(--paper3);flex-shrink:0;border:1px solid var(--rule);display:flex;align-items:center;justify-content:center;font-size:.6rem;color:var(--text3)">♪</div>
+      <div id="bbs-art-${s.rank}" style="width:48px;height:48px;background:var(--paper3);flex-shrink:0;border:1px solid var(--rule);display:flex;align-items:center;justify-content:center;font-size:.7rem;color:var(--text3)">♪</div>
       <div class="bb-info">
         <div class="bb-artist-name">${escHtml(s.title)}</div>
         <div class="bb-track">${escHtml(s.artist)}</div>
@@ -1094,6 +1114,31 @@ function renderBBSongs() {
       <div class="bb-wks"><strong>#${s.peak}</strong>peak · ${s.weeks}wk</div>
     </div>`;
   }).join('')}</div>`;
+  fetchBBSongArt();
+}
+
+async function fetchBBSongArt() {
+  const top = BB_SONGS.slice(0, 50);
+  for (let i = 0; i < top.length; i++) {
+    const s = top[i];
+    try {
+      const q = encodeURIComponent(s.title + ' ' + s.artist.split(' Featuring')[0].split(' With ')[0]);
+      const r = await fetch(`https://itunes.apple.com/search?term=${q}&entity=song&limit=1`);
+      const d = await r.json();
+      const result = d.results?.[0];
+      const artUrl = result?.artworkUrl100 || '';
+      if (artUrl) {
+        const el = document.getElementById(`bbs-art-${s.rank}`);
+        if (el) {
+          el.style.backgroundImage = `url(${artUrl})`;
+          el.style.backgroundSize = 'cover';
+          el.style.backgroundPosition = 'center';
+          el.textContent = '';
+        }
+      }
+    } catch(e) {}
+    await new Promise(r => setTimeout(r, 60));
+  }
 }
 
 function renderBBAlbums() {
@@ -1118,40 +1163,49 @@ function renderBBAlbums() {
 // renderBillboardStatic removed
 
 async function fetchBBAlbumArt() {
-  const top = BB_ALBUMS.slice(0, 15);
+  const top = BB_ALBUMS.slice(0, 50);
   for (let i = 0; i < top.length; i++) {
     const a = top[i];
     try {
-      const q = encodeURIComponent(a.title + ' ' + a.artist);
+      const q = encodeURIComponent(a.title + ' ' + a.artist.split(' & ')[0].split(' And ')[0]);
       const r = await fetch(`https://itunes.apple.com/search?term=${q}&entity=album&limit=1`);
       const d = await r.json();
       const result = d.results?.[0];
       if (result?.artworkUrl100) {
         const el = document.getElementById(`bba-art-${a.rank}`);
-        if (el) el.outerHTML = `<img style="width:48px;height:48px;object-fit:cover;flex-shrink:0;border:1px solid var(--rule)" src="${result.artworkUrl100}" alt="">`;
+        if (el) {
+          el.style.backgroundImage = `url(${result.artworkUrl100})`;
+          el.style.backgroundSize = 'cover';
+          el.style.backgroundPosition = 'center';
+          el.textContent = '';
+        }
       }
     } catch(e) {}
-    await new Promise(r => setTimeout(r, 100));
+    await new Promise(r => setTimeout(r, 60));
   }
 }
 
 async function fetchBBArtwork(artists) {
-  // Batch fetch artwork via iTunes for top 20
-  const top = artists.slice(0, 20);
+  const top = artists.slice(0, 50);
   for (let i = 0; i < top.length; i++) {
     const a = top[i];
+    const rank = a.rank || (i + 1);
     try {
       const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(a.name)}&entity=musicArtist&limit=1`);
       const d = await r.json();
       const result = d.results?.[0];
-      if (result?.artworkUrl100) {
-        const el = document.getElementById(`bb-art-${i+1}`);
+      const artUrl = result?.artworkUrl100?.replace('100x100','300x300') || '';
+      if (artUrl) {
+        const el = document.getElementById(`bb-art-${rank}`);
         if (el) {
-          el.outerHTML = `<img class="bb-art" id="bb-art-${i+1}" src="${result.artworkUrl100}" alt="${escHtml(a.name)}">`;
+          el.style.backgroundImage = `url(${artUrl})`;
+          el.style.backgroundSize = 'cover';
+          el.style.backgroundPosition = 'center';
+          el.textContent = '';
         }
       }
     } catch(e) {}
-    await new Promise(r => setTimeout(r, 80)); // rate limit
+    await new Promise(r => setTimeout(r, 60));
   }
 }
 
