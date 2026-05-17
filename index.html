@@ -631,7 +631,7 @@ function buildGrid() {
   grid.innerHTML = artists.map((a, i) => {
     const featured = a.featured ? ' featured' : '';
     return `<div class="artist-card${featured}" onclick="openPanel(${a.id})">
-      <img class="artist-card-img" src="${a.image}" alt="${a.name}" id="acard-${a.id}" onerror="fetchCardArt(${a.id},'${escStr(a.itunes)}')">
+      <div class="artist-card-img" id="acard-${a.id}" style="position:absolute;inset:0;background:var(--ink) center/cover no-repeat"></div>
       <div class="artist-card-overlay"></div>
       <div class="artist-card-num">${String(num++).padStart(2,'0')}</div>
       <div class="artist-card-body">
@@ -641,6 +641,28 @@ function buildGrid() {
       </div>
     </div>`;
   }).join('');
+
+  // Fetch iTunes art for every card
+  fetchAllCardArt(artists);
+}
+
+async function fetchAllCardArt(artists) {
+  for (let i = 0; i < artists.length; i++) {
+    const a = artists[i];
+    try {
+      const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(a.itunes)}&entity=musicArtist&limit=1`);
+      const d = await r.json();
+      const result = d.results?.[0];
+      if (result?.artworkUrl100) {
+        const el = document.getElementById(`acard-${a.id}`);
+        if (el) {
+          const url = result.artworkUrl100.replace('100x100', '600x600');
+          el.style.backgroundImage = `url(${url})`;
+        }
+      }
+    } catch(e) {}
+    await new Promise(r => setTimeout(r, 60));
+  }
 }
 
 // ─────────────────────────────────────────────
@@ -652,7 +674,13 @@ function openPanel(id) {
   currentArtist = a;
 
   document.getElementById('panel-breadcrumb').textContent = `${a.decade} · ${a.genre}`;
-  document.getElementById('panel-img').src = a.image;
+  // Fetch artist image from iTunes for panel
+  document.getElementById('panel-img').src = '';
+  fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(a.itunes)}&entity=musicArtist&limit=1`)
+    .then(r=>r.json()).then(d=>{
+      const res = d.results?.[0];
+      if(res?.artworkUrl100) document.getElementById('panel-img').src = res.artworkUrl100.replace('100x100','600x600');
+    }).catch(()=>{});
   document.getElementById('panel-genre-tag').textContent = a.genre;
   document.getElementById('panel-name').textContent = a.name;
   document.getElementById('panel-bio').textContent = a.bio;
