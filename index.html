@@ -208,11 +208,11 @@ body{background:var(--paper);color:var(--text);font-family:'Instrument Sans',san
 }
 .panel-close-btn:hover{background:var(--paper);color:var(--ink)}
 
-.panel-hero{position:relative;height:280px;overflow:hidden}
-.panel-hero-img{width:100%;height:100%;object-fit:cover;filter:grayscale(20%)}
+.panel-hero{position:relative;height:300px;overflow:hidden;background:var(--ink)}
+.panel-hero-img{width:100%;height:100%;object-fit:cover;object-position:top center;filter:grayscale(10%);display:block}
 .panel-hero-overlay{
   position:absolute;inset:0;
-  background:linear-gradient(to top,var(--paper) 0%,transparent 60%);
+  background:linear-gradient(to top,var(--paper) 0%,rgba(0,0,0,0.1) 60%,transparent 100%);
 }
 .panel-hero-tag{
   position:absolute;top:16px;left:16px;
@@ -699,7 +699,7 @@ function buildGrid() {
   grid.innerHTML = artists.map((a, i) => {
     const featured = a.featured ? ' featured' : '';
     return `<div class="artist-card${featured}" onclick="openPanel(${a.id})">
-      <div class="artist-card-img" id="acard-${a.id}" style="position:absolute;inset:0;background:var(--ink) center/cover no-repeat"></div>
+      <div class="artist-card-img" id="acard-${a.id}" style="position:absolute;inset:0;background-color:var(--ink);background-size:cover;background-position:center top;background-repeat:no-repeat"></div>
       <div class="artist-card-overlay"></div>
       <div class="artist-card-num">${String(num++).padStart(2,'0')}</div>
       <div class="artist-card-body">
@@ -727,15 +727,20 @@ async function fetchAllCardArt(artists) {
       continue;
     }
 
-    // Fall back to iTunes
+    // Fall back to iTunes - search for artist's most iconic album
     try {
-      const q = encodeURIComponent(a.album || a.itunes);
-      const r = await fetch(`https://itunes.apple.com/search?term=${q}&entity=album&limit=3`);
-      const d = await r.json();
-      const results = d.results || [];
-      const match = results.find(x => x.artistName?.toLowerCase().includes(a.itunes.split(' ')[0].toLowerCase())) || results[0];
-      if (match?.artworkUrl100) {
-        el.style.backgroundImage = `url(${match.artworkUrl100.replace('100x100','600x600')})`;
+      const q = encodeURIComponent(a.name);
+      const ar = await fetch(`https://itunes.apple.com/search?term=${q}&entity=musicArtist&limit=1`);
+      const ad = await ar.json();
+      const aid = ad.results?.[0]?.artistId;
+      if (aid) {
+        const r = await fetch(`https://itunes.apple.com/lookup?id=${aid}&entity=album&limit=5`);
+        const d = await r.json();
+        const albums = (d.results||[]).filter(x=>x.collectionType);
+        const match = albums[0];
+        if (match?.artworkUrl100) {
+          el.style.backgroundImage = `url(${match.artworkUrl100.replace('100x100','600x600')})`;
+        }
       }
     } catch(e) {}
     await new Promise(r => setTimeout(r, 80));
@@ -825,22 +830,31 @@ async function openTracklist(collectionId, name, art, year, type) {
 // ─────────────────────────────────────────────
 async function fetchArtistData(term) {
   try {
-    // Search for top tracks
-    const tracksUrl = `https://itunes.apple.com/search?term=${encodeURIComponent(term)}&entity=song&limit=10&sort=popular`;
-    const albumsUrl = `https://itunes.apple.com/search?term=${encodeURIComponent(term)}&entity=album&limit=15&sort=recent`;
+    // First find the iTunes artist ID for precise results
+    const artistSearchUrl = `https://itunes.apple.com/search?term=${encodeURIComponent(term)}&entity=musicArtist&limit=1`;
+    const artistRes = await fetch(artistSearchUrl);
+    const artistData = await artistRes.json();
+    const artistId = artistData.results?.[0]?.artistId;
 
-    const [tracksRes, albumsRes] = await Promise.all([
-      fetch(tracksUrl),
-      fetch(albumsUrl)
-    ]);
+    let tracksUrl, albumsUrl;
+    if (artistId) {
+      // Use artist ID for precise results
+      tracksUrl = `https://itunes.apple.com/lookup?id=${artistId}&entity=song&limit=10`;
+      albumsUrl = `https://itunes.apple.com/lookup?id=${artistId}&entity=album&limit=25`;
+    } else {
+      tracksUrl = `https://itunes.apple.com/search?term=${encodeURIComponent(term)}&entity=song&limit=10`;
+      albumsUrl = `https://itunes.apple.com/search?term=${encodeURIComponent(term)}&entity=album&limit=25`;
+    }
 
-    const [tracksData, albumsData] = await Promise.all([
-      tracksRes.json(),
-      albumsRes.json()
-    ]);
+    const [tracksRes, albumsRes] = await Promise.all([fetch(tracksUrl), fetch(albumsUrl)]);
+    const [tracksData, albumsData] = await Promise.all([tracksRes.json(), albumsRes.json()]);
 
-    renderTracks(tracksData.results || []);
-    renderDiscography(albumsData.results || []);
+    // Filter out the artist info row from lookup results
+    const tracks = (tracksData.results || []).filter(r => r.wrapperType === 'track' || r.kind === 'song');
+    const albums = (albumsData.results || []).filter(r => r.wrapperType === 'collection' || r.collectionType);
+
+    renderTracks(tracks);
+    renderDiscography(albums);
   } catch(e) {
     document.getElementById('panel-tracks').innerHTML = '<div class="loading-state" style="animation:none">Unable to load track data</div>';
     document.getElementById('panel-disco').innerHTML = '<div class="loading-state" style="animation:none">Unable to load discography</div>';
@@ -880,16 +894,33 @@ function renderDiscography(albums) {
   const el = document.getElementById('panel-disco');
   if (!albums.length) { el.innerHTML = '<div class="loading-state" style="animation:none">No albums found</div>'; return; }
 
-  // Dedupe by collection name
+  // Filter to only albums by this artist, dedupe, sort by year desc
+  const artistName = currentArtist?.name?.toLowerCase() || '';
+  const firstWord = artistName.split(' ')[0];
   const seen = new Set();
-  const unique = albums.filter(a => {
+  const unique = albums
+    .filter(a => {
+      const an = (a.artistName || '').toLowerCase();
+      return an.includes(firstWord) || an === artistName;
+    })
+    .filter(a => {
+      const key = a.collectionName?.toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    })
+    .sort((a,b) => new Date(b.releaseDate) - new Date(a.releaseDate))
+    .slice(0, 15);
+
+  // If filter too strict, fall back to all results deduped
+  const list = unique.length ? unique : albums.filter(a => {
     const key = a.collectionName?.toLowerCase();
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
   }).slice(0, 12);
 
-  el.innerHTML = unique.map(a => {
+  el.innerHTML = list.map(a => {
     const art = (a.artworkUrl100 || '').replace('100x100','300x300');
     const year = a.releaseDate ? new Date(a.releaseDate).getFullYear() : '';
     const type = a.collectionType === 'Single' ? 'Single' : 'Album';
