@@ -874,8 +874,10 @@ function buildGrid() {
   let num = 1;
   grid.innerHTML = artists.map((a, i) => {
     const featured = a.featured ? ' featured' : '';
+    const embImg = getArtistImg(a.name);
+    const cardBg = embImg ? `background-image:url(${embImg});background-size:cover;background-position:center top` : 'background-color:var(--ink)';
     return `<div class="artist-card${featured}" onclick="openPanel(${a.id})">
-      <div class="artist-card-img" id="acard-${a.id}" style="position:absolute;inset:0;background-color:var(--ink);background-size:cover;background-position:center top;background-repeat:no-repeat"></div>
+      <div class="artist-card-img" id="acard-${a.id}" style="position:absolute;inset:0;${cardBg};background-repeat:no-repeat"></div>
       <div class="artist-card-overlay"></div>
       <div class="artist-card-num">${String(num++).padStart(2,'0')}</div>
       <div class="artist-card-body">
@@ -896,12 +898,9 @@ async function fetchAllCardArt(artists) {
     const el = document.getElementById(`acard-${a.id}`);
     if (!el) continue;
 
-    // Use embedded image if available
+    // Skip if already has embedded image (set inline during render)
     const embedded = getArtistImg(a.name);
-    if (embedded) {
-      el.style.backgroundImage = `url(${embedded})`;
-      continue;
-    }
+    if (embedded) continue;
 
     // Fall back to iTunes - search for artist's most iconic album
     try {
@@ -1483,9 +1482,11 @@ function renderBBArtists() {
   const el = document.getElementById('bb-list');
   el.innerHTML = `<div class="bb-grid">${BB_ARTISTS.map(a => {
     const lw = a.lw === 0 ? '<span style="color:var(--accent);font-size:.55rem">RE-ENTRY</span>' : (a.lw > a.rank ? '▲' + (a.lw - a.rank) : a.lw < a.rank ? '▼' + (a.rank - a.lw) : '—');
+    const embedded = getArtistImg(a.name);
+    const bgStyle = embedded ? `background-image:url(${embedded});background-size:cover;background-position:center top;` : 'background:var(--paper3);';
     return `<div class="bb-item" onclick="openBBArtist('${escHtml(a.name)}')" data-rank="${a.rank}">
       <div class="bb-rank ${a.rank <= 10 ? 'top10' : ''}">${a.rank}</div>
-      <div class="bb-art-placeholder" id="bb-art-${a.rank}" style="width:48px;height:48px;background:var(--paper3);flex-shrink:0;border:1px solid var(--rule)"></div>
+      <div id="bb-art-${a.rank}" style="width:48px;height:48px;flex-shrink:0;border:1px solid var(--rule);${bgStyle}"></div>
       <div class="bb-info">
         <div class="bb-artist-name">${escHtml(a.name)}</div>
         <div class="bb-track">Last week: ${lw} &nbsp;·&nbsp; Peak: #${a.peak} &nbsp;·&nbsp; ${a.weeks} wks</div>
@@ -1493,6 +1494,8 @@ function renderBBArtists() {
       <div class="bb-wks"><strong>#${a.peak}</strong>peak</div>
     </div>`;
   }).join('')}</div>`;
+  // Fetch artwork for artists without embedded images
+  fetchBBArtwork(BB_ARTISTS.filter(a => !getArtistImg(a.name)));
 }
 
 function renderBBSongs() {
